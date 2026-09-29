@@ -1,7 +1,7 @@
 # Rechnungskern – E-Rechnung Service
 
 HTTP service and website that turn invoice data (JSON) into **EN 16931** compliant electronic invoices
-(ZUGFeRD / Factur-X PDF/A-3, XRechnung XML) and validate existing ones. Live at https://rechnungskern.de.
+(ZUGFeRD / Factur-X PDF/A-3, XRechnung XML) and validate existing ones. Live at https://www.rechnungskern.de.
 
 Documentation: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) (architecture, local setup, checklists, GitHub preparation)
 and [docs/SERVER.md](docs/SERVER.md) (production runbook).
@@ -227,7 +227,7 @@ instead of the initial root password, set `CORS_ORIGINS` to the origins of your 
 
 ## Author and license
 
-Built and operated by [Abbas Albukhari](https://rechnungskern.de/ueber) – live at <https://rechnungskern.de>.
+Built and operated by [Abbas Albukhari](https://www.rechnungskern.de/ueber) – live at <https://www.rechnungskern.de>.
 
 Released under the [MIT License](LICENSE). ZUGFeRD is a trademark of the Forum elektronische Rechnung
 Deutschland (FeRD); XRechnung is a standard of KoSIT. Both are mentioned descriptively. The Mustang validator
