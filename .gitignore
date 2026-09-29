@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.env
+out/
+logs/
+tools/*.jar
+docs/*.private.md
+*.private.md

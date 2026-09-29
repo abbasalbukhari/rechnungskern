@@ -1,0 +1,22 @@
+# Reverse proxy in front of the API. SITE_ADDRESS comes from .env:
+#   SITE_ADDRESS=invoice.example.com  -> HTTPS with Let's Encrypt (ports 80 + 443 must be open)
+#   SITE_ADDRESS=:80                  -> plain HTTP (only for a first test; API keys travel unencrypted)
+{$SITE_ADDRESS}
+
+encode gzip
+
+request_body {
+	max_size 25MB
+}
+
+header {
+	X-Content-Type-Options nosniff
+	X-Frame-Options SAMEORIGIN
+	-Server
+}
+
+reverse_proxy api:8000 {
+	transport http {
+		read_timeout 120s
+	}
+}

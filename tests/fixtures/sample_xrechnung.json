@@ -1,0 +1,53 @@
+{
+  "profile": "XRECHNUNG",
+  "language": "de",
+  "invoice": {
+    "number": "RE-2026-00043",
+    "type_code": "380",
+    "issue_date": "2026-09-28",
+    "due_date": "2026-10-28",
+    "delivery_date": "2026-09-25",
+    "currency": "EUR",
+    "buyer_reference": "04011000-12345-03",
+    "order_reference": "BEST-2026-118",
+    "notes": [ { "text": "Leistung gemäß Angebot AN-2026-77.", "subject_code": "AAI" } ]
+  },
+  "seller": {
+    "name": "Muster Technik GmbH",
+    "address": { "line1": "Industriestraße 12", "postcode": "70565", "city": "Stuttgart", "country": "DE" },
+    "vat_id": "DE123456789",
+    "contact": { "name": "Max Mustermann", "phone": "+49 711 123456-0", "email": "rechnung@example.com" },
+    "electronic_address": { "scheme": "EM", "id": "rechnung@example.com" },
+    "bank": { "iban": "DE89370400440532013000", "bic": "COBADEFFXXX", "account_holder": "Muster Technik GmbH" }
+  },
+  "buyer": {
+    "name": "Stadt Musterhausen – Bauamt",
+    "address": { "line1": "Rathausplatz 1", "postcode": "12345", "city": "Musterhausen", "country": "DE" },
+    "electronic_address": { "scheme": "0204", "id": "04011000-12345-03" }
+  },
+  "items": [
+    {
+      "name": "Wartung Heizungsanlage",
+      "quantity": "1",
+      "unit": "C62",
+      "unit_price": "850.00",
+      "tax_rate": "19",
+      "tax_category": "S"
+    },
+    {
+      "name": "Ersatzteil Umwälzpumpe",
+      "quantity": "2",
+      "unit": "C62",
+      "unit_price": "215.50",
+      "tax_rate": "19",
+      "tax_category": "S"
+    }
+  ],
+  "payment": {
+    "means_code": "58",
+    "terms_text": "Zahlbar innerhalb von 30 Tagen ohne Abzug."
+  },
+  "layout": {
+    "footer_text": "Muster Technik GmbH · Industriestraße 12 · 70565 Stuttgart · USt-IdNr. DE123456789 · Amtsgericht Stuttgart HRB 123456"
+  }
+}

@@ -1,0 +1,72 @@
+{% extends "site/base.html" %}
+{% block title %}Impressum / Legal notice – {{ s.site_name }}{% endblock %}
+{% block description %}Impressum und Anbieterkennzeichnung von {{ s.site_name }} / Legal notice.{% endblock %}
+{% block lang_switch_de %}/impressum{% endblock %}
+{% block lang_switch_en %}/legal-notice{% endblock %}
+{% macro field(value, label) -%}
+  {% if value %}{{ value }}{% else %}<span class="placeholder">[{{ label }}]</span>{% endif %}
+{%- endmacro %}
+{% block content %}
+<div class="legal">
+{% if lang == 'en' %}<p><a href="#de">Deutsche Fassung</a> (rechtlich maßgeblich) · English translation below</p>{% else %}<p><a href="#en">English translation</a> below</p>{% endif %}
+
+<h1 id="de">Impressum</h1>
+<h2>Angaben gemäß § 5 DDG</h2>
+<address>
+  {{ field(s.operator_name, 'Name / Firma') }}<br>
+  {{ field(s.operator_street, 'Straße und Hausnummer') }}<br>
+  {{ field(s.operator_city, 'PLZ und Ort') }}<br>
+  {{ s.operator_country }}
+</address>
+<h3>Kontakt</h3>
+<p>E-Mail: {% if s.contact_email %}<a href="mailto:{{ s.contact_email }}">{{ s.contact_email }}</a>{% else %}<span class="placeholder">[E-Mail-Adresse]</span>{% endif %}
+{% if s.operator_phone %}<br>Telefon: {{ s.operator_phone }}{% endif %}</p>
+{% if s.operator_vat_id %}<h3>Umsatzsteuer-ID</h3><p>Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: {{ s.operator_vat_id }}</p>{% endif %}
+{% if s.operator_register %}<h3>Registereintrag</h3><p>{{ s.operator_register }}</p>{% endif %}
+<h3>Verantwortlich für den Inhalt gemäß § 18 Abs. 2 MStV</h3>
+<p>{{ field(s.operator_name, 'Name') }}<br>Anschrift wie oben.</p>
+
+<h2>Hinweise zum Dienst</h2>
+<p>{{ s.site_name }} ist ein kostenloser technischer Dienst zur Erzeugung elektronischer Rechnungen (ZUGFeRD/Factur-X, XRechnung). Es besteht kein Anspruch auf Verfügbarkeit, Fehlerfreiheit oder Fortführung des Dienstes; er kann jederzeit eingeschränkt oder eingestellt werden. Übermittelte Rechnungsdaten werden nicht gespeichert (siehe <a href="/datenschutz">Datenschutzerklärung</a>).</p>
+
+<h2>Haftung für Inhalte</h2>
+<p>Die Inhalte dieser Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte sowie der erzeugten Dokumente kann jedoch keine Gewähr übernommen werden. Die inhaltliche, rechtliche und steuerliche Richtigkeit der erzeugten Rechnungen liegt in der Verantwortung der Nutzerinnen und Nutzer; der Dienst stellt keine Steuer- oder Rechtsberatung dar.</p>
+
+<h2>Haftung für Links</h2>
+<p>Dieses Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte kein Einfluss besteht. Für diese fremden Inhalte ist stets der jeweilige Anbieter oder Betreiber verantwortlich. Zum Zeitpunkt der Verlinkung waren keine Rechtsverstöße erkennbar; bei Bekanntwerden von Rechtsverletzungen werden derartige Links umgehend entfernt.</p>
+
+<h2>Urheberrecht</h2>
+<p>Die durch den Betreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. ZUGFeRD ist eine Marke des Forums elektronische Rechnung Deutschland (FeRD), XRechnung ein Standard der KoSIT; die Nennung erfolgt rein beschreibend.</p>
+
+<hr class="lang-sep">
+
+<h1 id="en">Legal notice</h1>
+<p><em>This is a courtesy translation. The German version above is legally binding.</em></p>
+<h2>Information pursuant to § 5 DDG (German Digital Services Act)</h2>
+<address>
+  {{ field(s.operator_name, 'Name / company') }}<br>
+  {{ field(s.operator_street, 'Street and number') }}<br>
+  {{ field(s.operator_city, 'Postcode and city') }}<br>
+  {% if s.operator_country == 'Deutschland' %}Germany{% else %}{{ s.operator_country }}{% endif %}
+</address>
+<h3>Contact</h3>
+<p>E-mail: {% if s.contact_email %}<a href="mailto:{{ s.contact_email }}">{{ s.contact_email }}</a>{% else %}<span class="placeholder">[e-mail address]</span>{% endif %}
+{% if s.operator_phone %}<br>Phone: {{ s.operator_phone }}{% endif %}</p>
+{% if s.operator_vat_id %}<h3>VAT ID</h3><p>VAT identification number pursuant to § 27a UStG: {{ s.operator_vat_id }}</p>{% endif %}
+{% if s.operator_register %}<h3>Register entry</h3><p>{{ s.operator_register }}</p>{% endif %}
+<h3>Responsible for content pursuant to § 18 (2) MStV (German State Media Treaty)</h3>
+<p>{{ field(s.operator_name, 'Name') }}<br>Address as above.</p>
+
+<h2>About the service</h2>
+<p>{{ s.site_name }} is a free technical service for generating electronic invoices (ZUGFeRD/Factur-X, XRechnung). There is no entitlement to availability, freedom from errors or continuation of the service; it may be restricted or discontinued at any time. Submitted invoice data is not stored (see <a href="/privacy">privacy policy</a>).</p>
+
+<h2>Liability for content</h2>
+<p>The content of these pages was created with great care. However, no guarantee can be given for the accuracy, completeness or timeliness of the content or of the generated documents. Users remain responsible for the factual, legal and tax correctness of the invoices they generate; the service does not constitute tax or legal advice.</p>
+
+<h2>Liability for links</h2>
+<p>This site contains links to external third-party websites over whose content we have no influence. The respective provider or operator is always responsible for the content of linked pages. No legal violations were apparent at the time of linking; such links will be removed immediately if violations become known.</p>
+
+<h2>Copyright</h2>
+<p>Content and works created by the operator on these pages are subject to German copyright law. ZUGFeRD is a trademark of the Forum elektronische Rechnung Deutschland (FeRD); XRechnung is a standard of KoSIT. Both are mentioned purely descriptively.</p>
+</div>
+{% endblock %}

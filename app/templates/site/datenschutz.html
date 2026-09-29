@@ -1,0 +1,104 @@
+{% extends "site/base.html" %}
+{% block title %}Datenschutzerklärung / Privacy policy – {{ s.site_name }}{% endblock %}
+{% block description %}Datenschutzerklärung von {{ s.site_name }}: Rechnungsdaten werden nicht gespeichert und sofort nach der Verarbeitung gelöscht.{% endblock %}
+{% block lang_switch_de %}/datenschutz{% endblock %}
+{% block lang_switch_en %}/privacy{% endblock %}
+{% macro field(value, label) -%}
+  {% if value %}{{ value }}{% else %}<span class="placeholder">[{{ label }}]</span>{% endif %}
+{%- endmacro %}
+{% block content %}
+<div class="legal">
+{% if lang == 'en' %}<p><a href="#de">Deutsche Fassung</a> (rechtlich maßgeblich) · English translation below</p>{% else %}<p><a href="#en">English translation</a> below</p>{% endif %}
+
+<h1 id="de">Datenschutzerklärung</h1>
+
+<div class="notice">
+  <strong>Kurz gesagt:</strong> Rechnungsdaten, die Sie an die API senden, werden ausschließlich zur Erzeugung Ihres Dokuments verarbeitet und
+  <strong>unmittelbar nach der Auslieferung gelöscht</strong>. Es werden keine Kopien, Sicherungen oder Auswertungen angelegt. Es gibt keine Cookies und kein Tracking.
+</div>
+
+<h2>1. Verantwortlicher</h2>
+<address>
+  {{ field(s.operator_name, 'Name / Firma') }}<br>
+  {{ field(s.operator_street, 'Straße und Hausnummer') }}<br>
+  {{ field(s.operator_city, 'PLZ und Ort') }}, {{ s.operator_country }}<br>
+  E-Mail: {% if s.contact_email %}<a href="mailto:{{ s.contact_email }}">{{ s.contact_email }}</a>{% else %}<span class="placeholder">[E-Mail-Adresse]</span>{% endif %}
+</address>
+
+<h2>2. Verarbeitung von Rechnungsdaten über die API</h2>
+<p>Wenn Sie den Dienst nutzen, übermitteln Sie Rechnungsdaten (z. B. Name und Anschrift von Rechnungssteller und Rechnungsempfänger, Ansprechpartner, Bankverbindung, Rechnungspositionen, Logo). Diese Daten werden ausschließlich dazu verwendet, das angeforderte Dokument (PDF und/oder XML) zu erzeugen und in derselben Anfrage an Sie zurückzuliefern.</p>
+<ul>
+  <li>Die Verarbeitung erfolgt im Arbeitsspeicher des Servers. Nach der Auslieferung der Antwort werden die Daten <strong>sofort verworfen</strong>.</li>
+  <li>Es werden <strong>keine Kopien</strong> der übermittelten Daten oder der erzeugten Dokumente gespeichert – weder in Datenbanken, noch in Dateien, noch in Sicherungen.</li>
+  <li>Bei der optionalen Prüffunktion (<code>/v1/validate</code>) wird die hochgeladene Datei für die Dauer der Prüfung in einem temporären Verzeichnis abgelegt und unmittelbar danach automatisch gelöscht.</li>
+  <li>Eine Übermittlung an Dritte findet nicht statt. Es erfolgt keine Auswertung, kein Profiling und keine Nutzung für andere Zwecke.</li>
+</ul>
+<p>Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO (Erbringung des von Ihnen angeforderten Dienstes) sowie Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem sicheren, funktionierenden Dienst). Soweit Sie als Nutzer personenbezogene Daten Dritter (z. B. Ihrer Kunden) übermitteln, sind Sie hierfür datenschutzrechtlich verantwortlich; auf Anfrage schließen wir mit Ihnen einen Vertrag zur Auftragsverarbeitung nach Art. 28 DSGVO.</p>
+
+<h2>3. Technische Protokolle und Hosting</h2>
+<p>Der Dienst wird auf einem Server des Anbieters {{ s.hosting_provider }} betrieben. Beim Aufruf der Website und der API fallen technisch bedingte Protokolldaten an (Zeitpunkt, aufgerufener Endpunkt, HTTP-Statuscode, Fehlermeldungen, IP-Adresse). Diese Protokolle enthalten <strong>keine Rechnungsinhalte</strong> und werden nicht dauerhaft aufbewahrt; sie werden automatisch rotiert und dabei überschrieben. Zum Schutz vor Missbrauch wird die IP-Adresse für die öffentlichen Funktionen (Erstellen und Prüfen ohne API-Schlüssel) kurzzeitig im Arbeitsspeicher gezählt (Begrenzung der Anfragen pro Stunde); diese Zähler werden nicht gespeichert und verfallen automatisch. Die Verbindung erfolgt, soweit über einen Domainnamen aufgerufen, TLS-verschlüsselt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO.</p>
+
+<h2>4. Kontaktaufnahme per E-Mail</h2>
+<p>Wenn Sie uns per E-Mail kontaktieren (z. B. um einen API-Schlüssel anzufragen), verarbeiten wir Ihre Angaben (E-Mail-Adresse, Name, Inhalt der Nachricht) zur Bearbeitung der Anfrage und zur Verwaltung des API-Zugangs. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO. Die Daten werden gelöscht, sobald sie für den Zweck nicht mehr erforderlich sind und keine gesetzlichen Aufbewahrungspflichten entgegenstehen.</p>
+
+<h2>5. Cookies, Tracking, externe Dienste</h2>
+<p>Diese Website setzt keine Cookies, verwendet keine Analyse- oder Tracking-Dienste und bindet keine externen Inhalte (z. B. Schriftarten oder Skripte von Drittanbietern) ein.</p>
+<p>Der Rechnungs-Editor speichert Ihre Eingaben (Firmendaten, Kunden, Positionen, Logo) ausschließlich im <strong>lokalen Speicher Ihres Browsers</strong> („Local Storage“) auf Ihrem Gerät, damit Sie sie beim nächsten Besuch nicht erneut eingeben müssen. Diese Daten werden nicht an uns übertragen, außer wenn Sie ein Dokument erstellen oder prüfen lassen. Sie können sie jederzeit über „Alles zurücksetzen“ oder in den Einstellungen Ihres Browsers löschen.</p>
+
+<h2>6. Ihre Rechte</h2>
+<p>Sie haben gegenüber dem Verantwortlichen die Rechte auf Auskunft (Art. 15 DSGVO), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21 DSGVO). Da Rechnungsdaten nicht gespeichert werden, liegen uns nach Abschluss einer Anfrage in der Regel keine Daten mehr vor. Sie haben zudem das Recht, sich bei einer Datenschutz-Aufsichtsbehörde zu beschweren.</p>
+
+<h2>7. Kein Anspruch auf Verfügbarkeit</h2>
+<p>Der Dienst wird kostenlos angeboten. Es besteht kein Anspruch auf Verfügbarkeit oder Fortführung; der Dienst kann jederzeit unterbrochen, geändert oder eingestellt werden. Bitte übermitteln Sie keine Daten, deren Verlust bei einer fehlgeschlagenen Anfrage für Sie ein Problem darstellt – der Dienst speichert nichts und kann daher auch nichts wiederherstellen.</p>
+
+<h2>8. Änderungen</h2>
+<p>Diese Datenschutzerklärung kann angepasst werden, wenn sich der Dienst oder die Rechtslage ändert. Es gilt die jeweils hier veröffentlichte Fassung. Stand: {{ year }}.</p>
+
+<hr class="lang-sep">
+
+<h1 id="en">Privacy policy</h1>
+<p><em>This is a courtesy translation. The German version above is legally binding.</em></p>
+
+<div class="notice">
+  <strong>In short:</strong> invoice data you send to the API is processed solely to generate your document and is
+  <strong>deleted immediately after delivery</strong>. No copies, backups or analytics are kept. There are no cookies and no tracking.
+</div>
+
+<h2>1. Controller</h2>
+<address>
+  {{ field(s.operator_name, 'Name / company') }}<br>
+  {{ field(s.operator_street, 'Street and number') }}<br>
+  {{ field(s.operator_city, 'Postcode and city') }}, {% if s.operator_country == 'Deutschland' %}Germany{% else %}{{ s.operator_country }}{% endif %}<br>
+  E-mail: {% if s.contact_email %}<a href="mailto:{{ s.contact_email }}">{{ s.contact_email }}</a>{% else %}<span class="placeholder">[e-mail address]</span>{% endif %}
+</address>
+
+<h2>2. Processing of invoice data via the API</h2>
+<p>When you use the service you transmit invoice data (e.g. names and addresses of seller and buyer, contact persons, bank details, line items, logo). This data is used exclusively to generate the requested document (PDF and/or XML) and to return it to you within the same request.</p>
+<ul>
+  <li>Processing takes place in the server's memory. After the response has been delivered, the data is <strong>discarded immediately</strong>.</li>
+  <li><strong>No copies</strong> of the submitted data or the generated documents are stored – not in databases, files or backups.</li>
+  <li>For the optional validation function (<code>/v1/validate</code>) the uploaded file is placed in a temporary directory for the duration of the check and deleted automatically right afterwards.</li>
+  <li>Data is not transferred to third parties. There is no analysis, no profiling and no use for other purposes.</li>
+</ul>
+<p>The legal basis is Art. 6(1)(b) GDPR (provision of the service you requested) and Art. 6(1)(f) GDPR (legitimate interest in a secure, working service). If you, as a user, transmit personal data of third parties (e.g. your customers), you are the controller for that data; on request we will conclude a data processing agreement pursuant to Art. 28 GDPR with you.</p>
+
+<h2>3. Technical logs and hosting</h2>
+<p>The service runs on a server operated by {{ s.hosting_provider }}. When the website and the API are accessed, technical log data arises (timestamp, endpoint called, HTTP status code, error messages, IP address). These logs contain <strong>no invoice content</strong> and are not kept permanently; they are rotated automatically and overwritten in the process. To prevent abuse, the IP address is counted briefly in memory for the public functions (creating and validating without an API key) to limit requests per hour; these counters are not stored and expire automatically. When accessed via a domain name, the connection is TLS encrypted. Legal basis: Art. 6(1)(f) GDPR.</p>
+
+<h2>4. Contact by e-mail</h2>
+<p>If you contact us by e-mail (e.g. to request an API key), we process your details (e-mail address, name, message content) to handle the request and to manage API access. Legal basis: Art. 6(1)(b) GDPR. The data is deleted once it is no longer required for this purpose and no statutory retention obligations apply.</p>
+
+<h2>5. Cookies, tracking, external services</h2>
+<p>This website does not set cookies, does not use analytics or tracking services and does not embed external content (such as third-party fonts or scripts).</p>
+<p>The invoice editor stores your entries (company data, customers, line items, logo) exclusively in your browser's <strong>local storage</strong> on your device so that you do not have to re-enter them on your next visit. This data is not transmitted to us except when you create or validate a document. You can delete it at any time via "Reset everything" or in your browser settings.</p>
+
+<h2>6. Your rights</h2>
+<p>You have the rights of access (Art. 15 GDPR), rectification (Art. 16), erasure (Art. 17), restriction of processing (Art. 18), data portability (Art. 20) and objection (Art. 21 GDPR). Since invoice data is not stored, we usually no longer hold any data once a request has been completed. You also have the right to lodge a complaint with a data protection supervisory authority.</p>
+
+<h2>7. No guarantee of availability</h2>
+<p>The service is offered free of charge. There is no entitlement to availability or continuation; the service may be interrupted, changed or discontinued at any time. Please do not submit data whose loss in a failed request would be a problem for you – the service stores nothing and therefore cannot restore anything.</p>
+
+<h2>8. Changes</h2>
+<p>This privacy policy may be updated when the service or the legal situation changes. The version published here applies. Last updated: {{ year }}.</p>
+</div>
+{% endblock %}

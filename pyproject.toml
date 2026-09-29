@@ -1,0 +1,13 @@
+[project]
+name = "e-rechnung"
+version = "0.1.0"
+description = "EN 16931 e-invoice service: hybrid PDF/A-3 (ZUGFeRD/Factur-X) and XRechnung XML"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+markers = [
+    "pdf: needs WeasyPrint system libraries",
+    "mustang: needs Java and MUSTANG_JAR",
+]

@@ -1,0 +1,162 @@
+/* Invoice stylesheet for WeasyPrint (CSS Paged Media). Inlined into the HTML. */
+
+@page {
+  size: A4;
+  margin: 30mm 18mm 34mm 20mm;
+  @top-left { content: element(pageHeader); vertical-align: bottom; }
+  @bottom-left { content: element(pageFooter); vertical-align: top; }
+}
+@page :first {
+  margin-top: 16mm;
+  @top-left { content: none; }
+}
+
+:root {
+  --accent: #1f3a5f;
+  --text: #1c1c1c;
+  --muted: #6b6b6b;
+  --rule: #d9d9d9;
+  --rule-strong: #9a9a9a;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+  font-family: "Liberation Sans", "DejaVu Sans", Arial, Helvetica, sans-serif;
+  font-size: 9.5pt;
+  line-height: 1.4;
+}
+
+h1, h2 { margin: 0; font-weight: bold; }
+p { margin: 0 0 3mm 0; }
+table { border-collapse: collapse; width: 100%; }
+.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+s { color: var(--muted); }
+
+/* ---------- running header / footer ---------- */
+.running-header {
+  position: running(pageHeader);
+  width: 172mm;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 0.5pt solid var(--rule);
+  padding-bottom: 1.5mm;
+  font-size: 8pt;
+  color: var(--muted);
+}
+.rh-left { font-weight: bold; color: var(--accent); }
+
+.running-footer {
+  position: running(pageFooter);
+  width: 172mm;
+  border-top: 0.5pt solid var(--rule);
+  padding-top: 2mm;
+  font-size: 7.5pt;
+  color: var(--muted);
+  line-height: 1.35;
+}
+.footer-columns { display: flex; gap: 6mm; }
+.footer-col { flex: 1 1 0; }
+.footer-text { white-space: normal; }
+.page-number { margin-top: 1.5mm; text-align: right; }
+.pn::after { content: counter(page); }
+.pc::after { content: counter(pages); }
+
+/* ---------- first page header ---------- */
+.first-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  min-height: 22mm;
+  margin-bottom: 6mm;
+}
+.brand { flex: 0 0 auto; }
+.logo { max-height: 22mm; max-width: 70mm; }
+.brand-name { font-size: 16pt; font-weight: bold; color: var(--accent); }
+.header-text { text-align: right; color: var(--muted); font-size: 8.5pt; max-width: 90mm; }
+
+/* ---------- addresses and meta ---------- */
+.address-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 8mm;
+}
+.recipient { width: 85mm; margin-top: 6mm; }
+.sender-line {
+  font-size: 6.5pt;
+  color: var(--muted);
+  border-bottom: 0.5pt solid var(--rule);
+  padding-bottom: 1mm;
+  margin-bottom: 3mm;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.recipient-address { font-size: 10pt; line-height: 1.45; }
+.recipient-name { font-weight: bold; }
+
+.meta { width: 72mm; }
+.meta-table th { text-align: left; font-weight: normal; color: var(--muted); padding: 0.4mm 3mm 0.4mm 0; white-space: nowrap; }
+.meta-table td { text-align: right; padding: 0.4mm 0; }
+.contact { margin-top: 4mm; font-size: 8.5pt; color: var(--muted); text-align: right; }
+.contact-title { font-weight: bold; color: var(--text); }
+
+/* ---------- title / intro ---------- */
+.doc-title { font-size: 15pt; color: var(--accent); margin-bottom: 3mm; }
+.doc-number { font-weight: normal; color: var(--text); }
+.intro { margin-bottom: 5mm; }
+
+/* ---------- items ---------- */
+.items { margin-bottom: 5mm; }
+.items thead { display: table-header-group; }
+.items th {
+  text-align: left;
+  font-size: 8.5pt;
+  color: var(--accent);
+  border-bottom: 1pt solid var(--accent);
+  padding: 1.5mm 1.5mm;
+  vertical-align: bottom;
+}
+.items th.num { text-align: right; }
+.items td { padding: 1.8mm 1.5mm; vertical-align: top; border-bottom: 0.5pt solid var(--rule); }
+.items tr { page-break-inside: avoid; }
+.items tr.sub td { padding-top: 0; padding-bottom: 1.2mm; border-bottom: none; color: var(--muted); font-size: 8.5pt; }
+.items tr.item:has(+ tr.sub) td { border-bottom: none; padding-bottom: 0.5mm; }
+.items tr.sub-total td { border-bottom: 0.5pt solid var(--rule); color: var(--text); font-weight: bold; }
+.c-pos { width: 9mm; color: var(--muted); }
+.c-qty { width: 16mm; }
+.c-unit { width: 16mm; }
+.c-price { width: 26mm; }
+.c-vat { width: 14mm; }
+.c-amount { width: 26mm; }
+.item-name { font-weight: bold; }
+.item-desc { color: var(--muted); font-size: 8.5pt; margin-top: 0.5mm; }
+.item-sku { color: var(--muted); font-size: 7.5pt; margin-top: 0.5mm; }
+.was { color: var(--muted); font-size: 7.5pt; }
+
+/* ---------- totals ---------- */
+.totals-block { page-break-inside: avoid; margin-bottom: 7mm; }
+.totals { width: 95mm; margin-left: auto; page-break-inside: avoid; }
+.totals tr { page-break-inside: avoid; }
+.totals th { text-align: left; font-weight: normal; padding: 1.2mm 1.5mm; color: var(--muted); }
+.totals td { padding: 1.2mm 1.5mm; }
+.totals tr.basis th, .totals tr.basis td { border-top: 0.5pt solid var(--rule); }
+.totals tr.grand th, .totals tr.grand td {
+  font-weight: bold;
+  color: var(--text);
+  border-top: 1pt solid var(--accent);
+  border-bottom: 1pt solid var(--accent);
+  font-size: 10.5pt;
+}
+.exempt { width: 100%; text-align: left; font-size: 8.5pt; color: var(--muted); margin-top: 2mm; }
+
+/* ---------- payment / notes / closing ---------- */
+.payment-block, .notes-block { page-break-inside: avoid; margin-bottom: 6mm; }
+h2 { font-size: 10pt; color: var(--accent); margin-bottom: 2mm; border-bottom: 0.5pt solid var(--rule); padding-bottom: 1mm; }
+.payment th { text-align: left; font-weight: normal; color: var(--muted); width: 38mm; padding: 0.5mm 2mm 0.5mm 0; vertical-align: top; }
+.payment td { padding: 0.5mm 0; }
+.terms { margin-bottom: 2mm; }
+.closing { margin-top: 4mm; }

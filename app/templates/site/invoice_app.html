@@ -1,0 +1,52 @@
+{% extends "site/base.html" %}
+{% block title %}{% if lang == 'en' %}Create an e-invoice online (ZUGFeRD / XRechnung) – free{% else %}E-Rechnung online erstellen (ZUGFeRD / XRechnung) – kostenlos{% endif %} – {{ s.site_name }}{% endblock %}
+{% block description %}{% if lang == 'en' %}Create a compliant e-invoice in your browser: ZUGFeRD/Factur-X PDF or XRechnung XML. Free, no registration, your data stays in your browser.{% else %}Erstellen Sie eine konforme E-Rechnung direkt im Browser: ZUGFeRD/Factur-X PDF oder XRechnung XML. Kostenlos, ohne Registrierung, Ihre Daten bleiben in Ihrem Browser.{% endif %}{% endblock %}
+{% block alternate %}<link rel="alternate" hreflang="de" href="{{ base_url }}/rechnung"><link rel="alternate" hreflang="en" href="{{ base_url }}/en/invoice">{% endblock %}
+{% block lang_switch_de %}/rechnung{% endblock %}
+{% block lang_switch_en %}/en/invoice{% endblock %}
+{% block wrap_class %}wide{% endblock %}
+{% block content %}
+<div class="app-head">
+  <div>
+    <h1 data-i18n="app_title"></h1>
+    <p data-i18n="app_sub"></p>
+  </div>
+  <div class="btn-row">
+    <button class="btn secondary small" id="btnNew" type="button" data-i18n="new_invoice"></button>
+    <button class="btn secondary small" id="btnExport" type="button" data-i18n="export_json"></button>
+    <button class="btn secondary small" id="btnReset" type="button" data-i18n="reset_all"></button>
+  </div>
+</div>
+
+<div class="app-layout">
+  <form id="form" autocomplete="on" novalidate></form>
+
+  <aside class="sidebar">
+    <section class="block totals-box">
+      <h2 data-i18n="totals"></h2>
+      <div id="totals"><p class="muted" data-i18n="totals_hint"></p></div>
+      <div id="errors"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn" id="btnPdf" type="button" data-i18n="make_pdf"></button>
+        <button class="btn secondary" id="btnXml" type="button" data-i18n="make_xml"></button>
+      </div>
+      <div class="btn-row">
+        <button class="btn secondary small" id="btnPreview" type="button" data-i18n="preview"></button>
+        <button class="btn secondary small" id="btnCheck" type="button" data-i18n="check"></button>
+      </div>
+      <div class="status" id="status"></div>
+      <div id="checkResult"></div>
+      <p class="muted" data-i18n="privacy_hint"></p>
+    </section>
+  </aside>
+</div>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <header><strong id="modalTitle"></strong><button class="btn secondary small" type="button" id="modalClose">✕</button></header>
+    <iframe id="modalFrame" title="preview"></iframe>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+{% endblock %}
+{% block scripts %}<script src="/static/site/app.js"></script>{% endblock %}

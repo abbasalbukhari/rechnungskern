@@ -1,0 +1,90 @@
+{% extends "site/base.html" %}
+{% set name = s.author_name or s.site_name %}
+{% set title_line = (s.author_title_en if lang == 'en' else s.author_title_de) %}
+{% block title %}{% if lang == 'en' %}About {{ s.site_name }} – a project by {{ name }}{% else %}Über {{ s.site_name }} – ein Projekt von {{ name }}{% endif %}{% endblock %}
+{% block description %}{% if lang == 'en' %}Why {{ s.site_name }} exists, how it works and who is behind it: {{ name }}{% if title_line %}, {{ title_line }}{% endif %}. Free EN 16931 e-invoices (ZUGFeRD, XRechnung) without data retention.{% else %}Warum es {{ s.site_name }} gibt, wie es funktioniert und wer dahinter steht: {{ name }}{% if title_line %}, {{ title_line }}{% endif %}. Kostenlose E-Rechnungen nach EN 16931 (ZUGFeRD, XRechnung) ohne Datenspeicherung.{% endif %}{% endblock %}
+{% block alternate %}<link rel="alternate" hreflang="de" href="{{ base_url }}/ueber"><link rel="alternate" hreflang="en" href="{{ base_url }}/en/about">{% endblock %}
+{% block lang_switch_de %}/ueber{% endblock %}
+{% block lang_switch_en %}/en/about{% endblock %}
+{% block head %}
+{% set same_as = ([s.author_linkedin, s.author_github, s.author_xing] + s.author_websites) | select | list %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"Person","@id":"{{ base_url }}/ueber#person","name":"{{ name }}"{% if title_line %},"jobTitle":"{{ title_line }}"{% endif %},"url":"{{ base_url }}/ueber","email":"mailto:{{ s.contact_email }}","address":{"@type":"PostalAddress","addressLocality":"{{ (s.operator_city.split(' ', 1)[1] if ' ' in s.operator_city else s.operator_city) }}","addressCountry":"DE"}{% if same_as %},"sameAs":[{% for u in same_as %}"{{ u }}"{% if not loop.last %},{% endif %}{% endfor %}]{% endif %}},
+ {"@type":"AboutPage","name":"{{ self.title() }}","url":"{{ base_url }}{{ path }}","inLanguage":"{{ lang }}","about":{"@id":"{{ base_url }}/ueber#person"},"mainEntity":{"@type":"SoftwareApplication","name":"{{ s.site_name }}","url":"{{ base_url }}/","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@id":"{{ base_url }}/ueber#person"}{% if s.project_repo %},"codeRepository":"{{ s.project_repo }}"{% endif %}}}
+]}
+</script>
+{% endblock %}
+{% block content %}
+{% if lang == 'en' %}
+<section class="hero">
+  <h1>About {{ s.site_name }}</h1>
+  <p class="lead">{{ s.site_name }} is an independent project by <strong>{{ name }}</strong>{% if title_line %}, {{ title_line }}{% endif %}. It creates and validates e-invoices according to EN 16931 – free of charge and without storing any data.</p>
+</section>
+
+<h2>Why this project exists</h2>
+<p>Germany has been phasing in mandatory electronic invoicing for B2B since 2025. Large companies solve this with their ERP systems; small businesses, freelancers and tradespeople are often left with a PDF that legally is not an e-invoice. The goal of {{ s.site_name }} is simple: enter invoice data, get a compliant <strong>ZUGFeRD/Factur-X PDF</strong> or <strong>XRechnung XML</strong> back – in the browser or via API – and be able to <strong>check</strong> any e-invoice against the same rules that authorities apply.</p>
+
+<h2>Design decisions</h2>
+<ul>
+  <li><strong>No data retention.</strong> Invoice data is processed in memory and discarded once the response is delivered. This is not a feature toggle but the architecture: there is no database.</li>
+  <li><strong>Compliance is verified, not assumed.</strong> Every XML is checked against the official schema; the EN 16931 and XRechnung Schematron rules as well as PDF/A-3 are checked with the Mustang validator, and the test suite contains negative tests that prove the validator catches violations.</li>
+  <li><strong>Amounts are calculated server-side</strong> with decimal arithmetic and the rounding rules of the standard (BR-CO-*), so line, document and VAT totals are always consistent – including price discounts, line and document level allowances and charges.</li>
+  <li><strong>Boring, proven technology.</strong> Python, FastAPI, WeasyPrint (HTML to PDF/A-3), drafthorse (CII XML), Caddy for TLS, Docker for deployment. No JavaScript framework on the site; the invoice editor is plain JavaScript that keeps your entries in your own browser.</li>
+</ul>
+
+<h2>Who is behind it</h2>
+<p><strong>{{ name }}</strong>{% if title_line %} – {{ title_line }}{% endif %}. {{ s.site_name }} is developed and operated privately in {{ (s.operator_city.split(' ', 1)[1] if ' ' in s.operator_city else s.operator_city) or 'Germany' }}. Questions, feedback or an API key: <a href="mailto:{{ s.contact_email }}">{{ s.contact_email }}</a>.</p>
+{% if s.author_linkedin or s.author_github or s.author_xing or s.author_websites or s.project_repo %}
+<ul>
+  {% if s.author_linkedin %}<li><a href="{{ s.author_linkedin }}" rel="me noopener">LinkedIn</a></li>{% endif %}
+  {% if s.author_github %}<li><a href="{{ s.author_github }}" rel="me noopener">GitHub</a></li>{% endif %}
+  {% if s.author_xing %}<li><a href="{{ s.author_xing }}" rel="me noopener">XING</a></li>{% endif %}
+  {% for w in s.author_websites %}<li><a href="{{ w }}" rel="me noopener">{{ w.replace("https://", "").replace("http://", "").rstrip("/") }}</a></li>{% endfor %}
+  {% if s.project_repo %}<li><a href="{{ s.project_repo }}" rel="noopener">Source code of {{ s.site_name }}</a></li>{% endif %}
+</ul>
+{% endif %}
+
+<h2>Use it</h2>
+<div class="btn-row">
+  <a class="btn" href="/en/invoice">Create invoice</a>
+  <a class="btn secondary" href="/en/validate">Validate e-invoice</a>
+  <a class="btn secondary" href="/docs">API documentation</a>
+</div>
+{% else %}
+<section class="hero">
+  <h1>Über {{ s.site_name }}</h1>
+  <p class="lead">{{ s.site_name }} ist ein unabhängiges Projekt von <strong>{{ name }}</strong>{% if title_line %}, {{ title_line }}{% endif %}. Es erstellt und prüft E-Rechnungen nach EN 16931 – kostenlos und ohne Speicherung von Daten.</p>
+</section>
+
+<h2>Warum es dieses Projekt gibt</h2>
+<p>Seit 2025 wird die elektronische Rechnung im B2B-Bereich in Deutschland schrittweise Pflicht. Große Unternehmen lösen das über ihre ERP-Systeme; kleine Betriebe, Selbstständige und Handwerker stehen oft mit einer PDF da, die rechtlich keine E-Rechnung ist. Das Ziel von {{ s.site_name }} ist einfach: Rechnungsdaten eingeben, eine konforme <strong>ZUGFeRD/Factur-X-PDF</strong> oder <strong>XRechnung-XML</strong> zurückbekommen – im Browser oder per API – und jede E-Rechnung gegen dieselben Regeln <strong>prüfen</strong> können, die auch Behörden anwenden.</p>
+
+<h2>Entscheidungen hinter dem Dienst</h2>
+<ul>
+  <li><strong>Keine Datenspeicherung.</strong> Rechnungsdaten werden im Arbeitsspeicher verarbeitet und nach der Auslieferung verworfen. Das ist keine Einstellung, sondern die Architektur: Es gibt keine Datenbank.</li>
+  <li><strong>Konformität wird geprüft, nicht angenommen.</strong> Jede XML wird gegen das offizielle Schema validiert; die Schematron-Regeln von EN 16931 und XRechnung sowie PDF/A-3 prüft der Mustang-Validator. Die Testsuite enthält Negativtests, die belegen, dass der Validator Verstöße tatsächlich erkennt.</li>
+  <li><strong>Beträge werden serverseitig berechnet</strong> mit Dezimalarithmetik und den Rundungsregeln der Norm (BR-CO-*), damit Positions-, Rechnungs- und Steuersummen immer zusammenpassen – auch bei Preisnachlässen, Positions- und Rechnungsrabatten und Zuschlägen.</li>
+  <li><strong>Bewährte Technik statt Modeerscheinungen.</strong> Python, FastAPI, WeasyPrint (HTML zu PDF/A-3), drafthorse (CII-XML), Caddy für TLS, Docker für den Betrieb. Kein JavaScript-Framework; der Rechnungs-Editor ist einfaches JavaScript, das Ihre Eingaben in Ihrem eigenen Browser behält.</li>
+</ul>
+
+<h2>Wer dahinter steht</h2>
+<p><strong>{{ name }}</strong>{% if title_line %} – {{ title_line }}{% endif %}. {{ s.site_name }} wird privat in {{ (s.operator_city.split(' ', 1)[1] if ' ' in s.operator_city else s.operator_city) or 'Deutschland' }} entwickelt und betrieben. Fragen, Rückmeldungen oder ein API-Schlüssel: <a href="mailto:{{ s.contact_email }}">{{ s.contact_email }}</a>.</p>
+{% if s.author_linkedin or s.author_github or s.author_xing or s.author_websites or s.project_repo %}
+<ul>
+  {% if s.author_linkedin %}<li><a href="{{ s.author_linkedin }}" rel="me noopener">LinkedIn</a></li>{% endif %}
+  {% if s.author_github %}<li><a href="{{ s.author_github }}" rel="me noopener">GitHub</a></li>{% endif %}
+  {% if s.author_xing %}<li><a href="{{ s.author_xing }}" rel="me noopener">XING</a></li>{% endif %}
+  {% for w in s.author_websites %}<li><a href="{{ w }}" rel="me noopener">{{ w.replace("https://", "").replace("http://", "").rstrip("/") }}</a></li>{% endfor %}
+  {% if s.project_repo %}<li><a href="{{ s.project_repo }}" rel="noopener">Quellcode von {{ s.site_name }}</a></li>{% endif %}
+</ul>
+{% endif %}
+
+<h2>Ausprobieren</h2>
+<div class="btn-row">
+  <a class="btn" href="/rechnung">Rechnung erstellen</a>
+  <a class="btn secondary" href="/pruefung">E-Rechnung prüfen</a>
+  <a class="btn secondary" href="/docs">API-Dokumentation</a>
+</div>
+{% endif %}
+{% endblock %}

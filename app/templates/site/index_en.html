@@ -1,0 +1,80 @@
+{% extends "site/base.html" %}
+{% block title %}Create & validate e-invoices – free (ZUGFeRD, XRechnung) | {{ s.site_name }}{% endblock %}
+{% block description %}Create and validate EN 16931 e-invoices for free: ZUGFeRD/Factur-X PDF/A-3 and XRechnung XML – online in your browser or via API. No registration, your data is never stored.{% endblock %}
+{% block alternate %}<link rel="alternate" hreflang="de" href="{{ base_url }}/"><link rel="alternate" hreflang="en" href="{{ base_url }}/en"><link rel="alternate" hreflang="x-default" href="{{ base_url }}/">{% endblock %}
+{% block head %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+ {"@type":"WebSite","name":"{{ s.site_name }}","url":"{{ base_url }}/en","inLanguage":"en"},
+ {"@type":"SoftwareApplication","name":"{{ s.site_name }}","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"{{ base_url }}/en","description":"Creates and validates EN 16931 e-invoices (ZUGFeRD/Factur-X PDF/A-3, XRechnung XML) – online and via API.","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"featureList":["ZUGFeRD 2.x / Factur-X PDF/A-3","XRechnung 3.0 XML","Validation with Mustang (EN 16931, XRechnung, PDF/A-3)","REST API","No data retention"]{% if s.author_name %},"author":{"@type":"Person","name":"{{ s.author_name }}","url":"{{ base_url }}/en/about"}{% endif %}},
+ {"@type":"FAQPage","mainEntity":[
+  {"@type":"Question","name":"What is an EN 16931 e-invoice?","acceptedAnswer":{"@type":"Answer","text":"An e-invoice is an invoice in a structured, machine-readable format according to the European standard EN 16931. In Germany the common formats are XRechnung (pure XML) and ZUGFeRD/Factur-X (PDF with embedded XML)."}},
+  {"@type":"Question","name":"What is the difference between ZUGFeRD and XRechnung?","acceptedAnswer":{"@type":"Answer","text":"ZUGFeRD/Factur-X is a hybrid PDF/A-3 containing a human-readable document plus the XML data. XRechnung is the standard for invoices to German public authorities and consists of XML only, with additional mandatory fields such as the Leitweg-ID."}},
+  {"@type":"Question","name":"When does e-invoicing become mandatory in Germany?","acceptedAnswer":{"@type":"Answer","text":"Since 1 January 2025 all businesses must be able to receive e-invoices. Sending becomes mandatory on 1 January 2027 for companies with more than EUR 800,000 previous-year turnover and on 1 January 2028 for all B2B businesses."}},
+  {"@type":"Question","name":"Is the service really free?","acceptedAnswer":{"@type":"Answer","text":"Yes. Creating and validating in the browser is free without registration. For API access a short e-mail is enough to receive an API key. There is no guarantee of availability."}},
+  {"@type":"Question","name":"Is my invoice data stored?","acceptedAnswer":{"@type":"Answer","text":"No. Data is processed in memory only and discarded immediately after the document is delivered. No copies, backups or analytics are kept."}}
+ ]}
+]}
+</script>
+{% endblock %}
+{% block content %}
+<section class="hero">
+  <h1>Create and validate e-invoices – free of charge.</h1>
+  <p class="lead">{{ s.site_name }} turns your invoice data into an EN 16931 e-invoice: a hybrid <strong>ZUGFeRD / Factur-X PDF/A-3</strong> or <strong>XRechnung XML</strong> for German public-sector customers – right in your browser or via API. It also validates existing e-invoices with the Mustang validator.</p>
+  <div class="badges">
+    <span class="badge">EN 16931</span><span class="badge">ZUGFeRD 2.x / Factur-X</span><span class="badge">XRechnung 3.0</span><span class="badge">PDF/A-3</span><span class="badge">No data retention</span>
+  </div>
+  <div class="btn-row">
+    <a class="btn" href="/en/invoice">Create invoice online</a>
+    <a class="btn secondary" href="/en/validate">Validate e-invoice</a>
+    <a class="btn secondary" href="/docs">API documentation</a>
+  </div>
+</section>
+
+<div class="notice free">
+  <strong>Free and without registration.</strong> Creating and validating in the browser is open to everyone. For automated access via the <strong>API</strong> you need an API key –
+  just send a short e-mail to <a href="mailto:{{ s.contact_email }}?subject={{ s.site_name }}%20API%20access">{{ s.contact_email or 'the address given in the legal notice' }}</a>.
+</div>
+
+<div class="grid">
+  <div class="card"><h3>Hybrid PDF</h3><p>PDF/A-3 with embedded CII XML (ZUGFeRD 2.x / Factur-X, profile EN 16931). Readable by people, machine-readable for accounting systems.</p></div>
+  <div class="card"><h3>XRechnung</h3><p>XRechnung 3.0 XML for German authorities and public-sector buyers, including the Leitweg-ID and all BR-DE rules.</p></div>
+  <div class="card"><h3>Verified compliance</h3><p>Every invoice is checked against the official XML schema; Schematron rules (EN 16931, XRechnung) and PDF/A-3 are verified with the Mustang validator.</p></div>
+  <div class="card"><h3>Discounts, charges, logo</h3><p>Price discounts, line and document level allowances and charges, multiple VAT rates, reverse charge, your logo, header and footer texts, German or English.</p></div>
+  <div class="card"><h3>Remembers your data – locally</h3><p>The invoice editor stores company, customers and payment details in your browser only. Next time everything is back without anything sitting on a server.</p></div>
+  <div class="card"><h3>Nothing is stored</h3><p>Invoice data is processed in memory only and discarded immediately after the response is delivered. No copies, no backups, no analytics.</p></div>
+</div>
+
+<h2>Three ways to an e-invoice</h2>
+<ol class="steps">
+  <li><strong><a href="/en/invoice">Create it in the browser</a></strong> – fill in the form, upload your logo, download PDF or XML. Your entries are kept for the next invoice.</li>
+  <li><strong><a href="/en/validate">Validate an existing e-invoice</a></strong> – upload a PDF or XML and get an EN 16931 / XRechnung report within seconds.</li>
+  <li><strong>Via API from your software</strong> – send JSON, receive the finished e-invoice. Request an API key by e-mail.</li>
+</ol>
+
+<pre><code>curl -X POST {{ base_url }}/v1/invoices/pdf \
+  -H "X-API-Key: YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d @invoice.json -o invoice.pdf</code></pre>
+
+<p>All endpoints, fields and examples are in the <a href="/docs">interactive API documentation</a>. The invoice editor can export the matching JSON for your API call.</p>
+
+<h2>Frequently asked questions</h2>
+<details class="faq"><summary>What is an EN 16931 e-invoice?</summary><p>An invoice in a structured, machine-readable format according to the European standard EN 16931. In Germany the common formats are XRechnung (pure XML) and ZUGFeRD/Factur-X (PDF with embedded XML). A plain PDF is not an e-invoice.</p></details>
+<details class="faq"><summary>What is the difference between ZUGFeRD and XRechnung?</summary><p>ZUGFeRD/Factur-X is a hybrid PDF/A-3 with a readable document and embedded XML data – ideal for business customers. XRechnung is the standard for invoices to German public authorities: XML only, with additional mandatory fields such as the Leitweg-ID.</p></details>
+<details class="faq"><summary>When does e-invoicing become mandatory in Germany?</summary><p>Since 1 January 2025 all businesses must be able to receive e-invoices. Sending becomes mandatory on 1 January 2027 for companies with more than EUR 800,000 previous-year turnover and on 1 January 2028 for all B2B businesses.</p></details>
+<details class="faq"><summary>Is the service really free?</summary><p>Yes. Creating and validating in the browser is free without registration. For the API a short e-mail is enough to get a key. There is no guarantee of availability; the service may be restricted or discontinued at any time.</p></details>
+<details class="faq"><summary>Is my invoice data stored?</summary><p>No. Data is processed in memory only and discarded immediately after delivery – no copies, no backups, no analytics. The editor stores your entries exclusively in your own browser. Details in the <a href="/privacy">privacy policy</a>.</p></details>
+
+{% if s.author_name %}
+<h2>About the project</h2>
+<p>{{ s.site_name }} is an independent project by <a href="/en/about" rel="author">{{ s.author_name }}</a>{% if s.author_title_en %}, {{ s.author_title_en }}{% endif %}. It exists because small businesses and freelancers are often left alone with the e-invoicing obligation: they need a compliant document, not a new accounting system. That is why the service is free, stores nothing and checks every document with the same tools the recipients use. <a href="/en/about">More about the background and the technology.</a></p>
+{% endif %}
+
+<h2>Terms of use</h2>
+<ul>
+  <li>The service is free. There is <strong>no guarantee of availability</strong>; maintenance, interruptions or discontinuation of the service are possible at any time.</li>
+  <li>Technical compliance is ensured to the best of our knowledge. You remain responsible for the content and tax correctness of your invoices; the service is no substitute for tax or legal advice.</li>
+  <li>Please use it fairly: the public functions are limited per user. For higher volumes request an API key.</li>
+</ul>
+{% endblock %}

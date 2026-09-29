@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ s.site_name }}{% endblock %}</title>
+<meta name="description" content="{% block description %}{% endblock %}">
+<link rel="canonical" href="{{ base_url }}{{ path }}">
+<meta property="og:site_name" content="{{ s.site_name }}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="{{ base_url }}{{ path }}">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:locale" content="{{ 'en_GB' if lang == 'en' else 'de_DE' }}">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#1f3a5f">
+{% if s.author_name %}<meta name="author" content="{{ s.author_name }}">{% endif %}
+{% block alternate %}{% endblock %}
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231f3a5f'/%3E%3Cpath d='M9 8h14v3H9zM9 14h14v3H9zM9 20h9v3H9z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="/static/site/site.css">
+{% block head %}{% endblock %}
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="{{ '/en' if lang == 'en' else '/' }}">{{ s.site_name }}<small>{% if lang == 'en' %}E-invoices via API{% else %}E-Rechnungen per API{% endif %}</small></a>
+      <ul>
+        {% if lang == 'en' %}
+        <li><a href="/en/invoice">Create invoice</a></li>
+        <li><a href="/en/validate">Validate</a></li>
+        <li><a href="/docs">API</a></li>
+        <li><a href="/en/about">About</a></li>
+        <li><a href="/legal-notice">Legal notice</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a class="lang" href="{% block lang_switch_de %}/{% endblock %}" hreflang="de">DE</a></li>
+        {% else %}
+        <li><a href="/rechnung">Rechnung erstellen</a></li>
+        <li><a href="/pruefung">E-Rechnung prüfen</a></li>
+        <li><a href="/docs">API</a></li>
+        <li><a href="/ueber">Über</a></li>
+        <li><a href="/impressum">Impressum</a></li>
+        <li><a href="/datenschutz">Datenschutz</a></li>
+        <li><a class="lang" href="{% block lang_switch_en %}/en{% endblock %}" hreflang="en">EN</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="wrap {% block wrap_class %}{% endblock %}">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+<footer>
+  <div class="wrap">
+    <ul>
+      {% if lang == 'en' %}
+      <li><a href="/en/invoice">Create invoice</a></li>
+      <li><a href="/en/validate">Validate e-invoice</a></li>
+      <li><a href="/docs">API documentation</a></li>
+      <li><a href="/en/about">About</a></li>
+      <li><a href="/legal-notice">Legal notice</a></li>
+      <li><a href="/privacy">Privacy policy</a></li>
+      {% else %}
+      <li><a href="/rechnung">Rechnung erstellen</a></li>
+      <li><a href="/pruefung">E-Rechnung prüfen</a></li>
+      <li><a href="/docs">API-Dokumentation</a></li>
+      <li><a href="/ueber">Über das Projekt</a></li>
+      <li><a href="/impressum">Impressum</a></li>
+      <li><a href="/datenschutz">Datenschutzerklärung</a></li>
+      {% endif %}
+    </ul>
+    &copy; {{ year }} {{ s.site_name }}
+    {% if s.author_name %}&middot; {% if lang == 'en' %}A project by <a href="/en/about" rel="author">{{ s.author_name }}</a>{% else %}Ein Projekt von <a href="/ueber" rel="author">{{ s.author_name }}</a>{% endif %}{% endif %}
+    &middot; {% if lang == 'en' %}Free service, provided without any guarantee of availability. Your data is never stored.{% else %}Kostenloser Dienst ohne Verfügbarkeitsgarantie. Ihre Daten werden nicht gespeichert.{% endif %}
+  </div>
+</footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

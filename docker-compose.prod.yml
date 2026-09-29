@@ -1,0 +1,41 @@
+# Production stack: API behind Caddy (automatic HTTPS with Let's Encrypt when SITE_ADDRESS is a domain).
+#
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# .env must contain API_KEYS and SITE_ADDRESS (see .env.example / deploy/deploy.sh).
+services:
+  api:
+    build: .
+    image: e-rechnung:prod
+    restart: unless-stopped
+    env_file:
+      - .env
+    expose:
+      - "8000"
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "5" }
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      # a domain (invoice.example.com) => automatic HTTPS; ":80" => plain HTTP on the IP only
+      - SITE_ADDRESS=${SITE_ADDRESS:-:80}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "5" }
+
+volumes:
+  caddy-data:
+  caddy-config:

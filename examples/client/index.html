@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-Rechnung Test Client</title>
+<style>
+  :root { --accent: #1f3a5f; --bg: #f4f6f9; --card: #fff; --line: #d9dee5; --muted: #667; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: #1c1c1c; }
+  header { background: var(--accent); color: #fff; padding: 14px 24px; }
+  header h1 { margin: 0; font-size: 18px; font-weight: 600; }
+  main { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; padding: 16px 24px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+  .card h2 { margin: 0 0 12px; font-size: 14px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 8px 0 4px; }
+  input, select, textarea { width: 100%; padding: 8px; border: 1px solid var(--line); border-radius: 6px; font: inherit; }
+  textarea { min-height: 70px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .row3 { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto; gap: 8px; align-items: end; }
+  .items .row3 { margin-bottom: 6px; }
+  button { padding: 9px 14px; border: 0; border-radius: 6px; background: var(--accent); color: #fff; font: inherit; cursor: pointer; }
+  button.secondary { background: #e9edf2; color: #1c1c1c; }
+  button.small { padding: 6px 10px; font-size: 13px; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  pre { background: #0f172a; color: #e2e8f0; padding: 12px; border-radius: 6px; overflow: auto; font-size: 12px; max-height: 400px; }
+  .status { margin-top: 10px; font-size: 13px; }
+  .ok { color: #157347; } .err { color: #b02a37; }
+  table.totals { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.totals td { padding: 4px 0; border-bottom: 1px solid var(--line); }
+  table.totals td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  iframe { width: 100%; height: 600px; border: 1px solid var(--line); border-radius: 6px; background: #fff; }
+  .hint { font-size: 12px; color: var(--muted); }
+</style>
+</head>
+<body>
+<header><h1>E-Rechnung Test Client (Vanilla JS)</h1></header>
+
+<main>
+  <section class="card">
+    <h2>Verbindung</h2>
+    <div class="row">
+      <div><label>API URL</label><input id="apiUrl" value=""></div>
+      <div><label>X-API-Key</label><input id="apiKey" value="dev-key-change-me"></div>
+    </div>
+    <div class="row">
+      <div><label>Profil</label>
+        <select id="profile"><option value="EN16931">EN16931 (ZUGFeRD / Factur-X)</option><option value="XRECHNUNG">XRECHNUNG</option></select></div>
+      <div><label>Sprache</label>
+        <select id="language"><option value="de">Deutsch</option><option value="en">English</option></select></div>
+    </div>
+
+    <h2 style="margin-top:18px">Rechnung</h2>
+    <div class="row">
+      <div><label>Rechnungsnummer</label><input id="number" value="RE-2026-00042"></div>
+      <div><label>Rechnungsdatum</label><input id="issueDate" type="date"></div>
+      <div><label>Fällig am</label><input id="dueDate" type="date"></div>
+      <div><label>Leistungsdatum</label><input id="deliveryDate" type="date"></div>
+      <div><label>Leitweg-ID / Buyer reference (XRechnung)</label><input id="buyerReference" value=""></div>
+      <div><label>Bestellnummer</label><input id="orderReference" value="PO-7781"></div>
+    </div>
+
+    <h2 style="margin-top:18px">Verkäufer</h2>
+    <div class="row">
+      <div><label>Firma</label><input id="sellerName" value="Muster Technik GmbH"></div>
+      <div><label>USt-IdNr.</label><input id="sellerVat" value="DE123456789"></div>
+      <div><label>Straße</label><input id="sellerStreet" value="Industriestraße 12"></div>
+      <div><label>PLZ / Ort</label><div class="row"><input id="sellerZip" value="70565"><input id="sellerCity" value="Stuttgart"></div></div>
+      <div><label>Kontakt Name</label><input id="sellerContactName" value="Max Mustermann"></div>
+      <div><label>Kontakt Telefon</label><input id="sellerContactPhone" value="+49 711 123456-0"></div>
+      <div><label>Kontakt E-Mail</label><input id="sellerContactEmail" value="rechnung@example.com"></div>
+      <div><label>IBAN</label><input id="sellerIban" value="DE89370400440532013000"></div>
+      <div><label>BIC</label><input id="sellerBic" value="COBADEFFXXX"></div>
+      <div><label>Logo (PNG/JPEG/SVG)</label><input id="logoFile" type="file" accept="image/png,image/jpeg,image/svg+xml"></div>
+    </div>
+
+    <h2 style="margin-top:18px">Käufer</h2>
+    <div class="row">
+      <div><label>Name</label><input id="buyerName" value="Beispiel Kunde AG"></div>
+      <div><label>Kundennummer</label><input id="buyerCustomerId" value="K-10023"></div>
+      <div><label>Straße</label><input id="buyerStreet" value="Musterweg 5"></div>
+      <div><label>PLZ / Ort</label><div class="row"><input id="buyerZip" value="80331"><input id="buyerCity" value="München"></div></div>
+      <div><label>USt-IdNr.</label><input id="buyerVat" value="DE987654321"></div>
+      <div><label>E-Mail (elektronische Adresse)</label><input id="buyerEmail" value="einkauf@kunde.example"></div>
+    </div>
+
+    <h2 style="margin-top:18px">Positionen</h2>
+    <div class="row3 hint"><span>Bezeichnung</span><span>Menge</span><span>Einheit</span><span>Einzelpreis</span><span>USt %</span><span>Rabatt %</span></div>
+    <div class="items" id="items"></div>
+    <button class="secondary small" id="addItem" type="button">+ Position</button>
+
+    <h2 style="margin-top:18px">Texte</h2>
+    <label>Kopfzeile (Header)</label><textarea id="headerText">Muster Technik GmbH
+Industriestraße 12 · 70565 Stuttgart</textarea>
+    <label>Einleitung</label><textarea id="introText">Sehr geehrte Damen und Herren,
+
+vielen Dank für Ihren Auftrag. Wir stellen Ihnen folgende Leistungen in Rechnung:</textarea>
+    <label>Zahlungsbedingungen (geht auch in die XML, BT-20)</label><textarea id="termsText">Zahlbar innerhalb von 30 Tagen ohne Abzug.</textarea>
+    <label>Hinweis / Notiz (geht auch in die XML, BG-1)</label><textarea id="noteText">Vielen Dank für Ihren Auftrag.</textarea>
+    <label>Schlusstext</label><textarea id="closingText">Mit freundlichen Grüßen
+Muster Technik GmbH</textarea>
+    <label>Fußzeile (Footer, 3 Spalten mit | trennen)</label><textarea id="footerText">Muster Technik GmbH
+Industriestraße 12
+70565 Stuttgart | Geschäftsführer: Max Mustermann
+Amtsgericht Stuttgart HRB 123456
+USt-IdNr. DE123456789 | Commerzbank
+IBAN DE89 3704 0044 0532 0130 00
+BIC COBADEFFXXX</textarea>
+    <div class="row">
+      <div><label>Akzentfarbe</label><input id="accent" type="color" value="#1f3a5f"></div>
+    </div>
+
+    <div class="actions">
+      <button id="btnTotals" type="button" class="secondary">Summen berechnen</button>
+      <button id="btnHtml" type="button" class="secondary">HTML-Vorschau</button>
+      <button id="btnXml" type="button">XML herunterladen</button>
+      <button id="btnPdf" type="button">PDF erzeugen &amp; herunterladen</button>
+      <button id="btnValidate" type="button" class="secondary">PDF erzeugen &amp; validieren (Mustang)</button>
+    </div>
+    <div class="status" id="status"></div>
+  </section>
+
+  <section class="card">
+    <h2>Ergebnis</h2>
+    <div id="totalsBox"></div>
+    <iframe id="preview" title="Vorschau" hidden></iframe>
+    <h2 style="margin-top:14px">Request-JSON</h2>
+    <pre id="requestJson">{}</pre>
+    <h2 style="margin-top:14px">Antwort</h2>
+    <pre id="responseBox"></pre>
+  </section>
+</main>
+
+<script src="client.js"></script>
+</body>
+</html>

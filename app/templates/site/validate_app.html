@@ -1,0 +1,25 @@
+{% extends "site/base.html" %}
+{% block title %}{% if lang == 'en' %}Validate e-invoice online (XRechnung, ZUGFeRD) – free{% else %}E-Rechnung online prüfen (XRechnung, ZUGFeRD) – kostenlos{% endif %} – {{ s.site_name }}{% endblock %}
+{% block description %}{% if lang == 'en' %}Free validator for XRechnung XML and ZUGFeRD/Factur-X PDF: XML schema, EN 16931 and XRechnung Schematron rules, PDF/A-3. Files are deleted immediately after the check.{% else %}Kostenloser Validator für XRechnung XML und ZUGFeRD/Factur-X PDF: XML-Schema, EN-16931- und XRechnung-Schematron-Regeln, PDF/A-3. Dateien werden sofort nach der Prüfung gelöscht.{% endif %}{% endblock %}
+{% block alternate %}<link rel="alternate" hreflang="de" href="{{ base_url }}/pruefung"><link rel="alternate" hreflang="en" href="{{ base_url }}/en/validate">{% endblock %}
+{% block lang_switch_de %}/pruefung{% endblock %}
+{% block lang_switch_en %}/en/validate{% endblock %}
+{% block content %}
+<div class="app-head">
+  <div>
+    <h1>{% if lang == 'en' %}Validate e-invoice{% else %}E-Rechnung prüfen{% endif %}</h1>
+    <p>{% if lang == 'en' %}XRechnung (XML), ZUGFeRD / Factur-X (PDF with XML) or UBL – checked with the Mustang validator against XML schema, EN 16931 / XRechnung Schematron rules and PDF/A-3.{% else %}XRechnung (XML), ZUGFeRD / Factur-X (PDF mit XML) oder UBL – geprüft mit dem Mustang-Validator gegen XML-Schema, EN-16931- / XRechnung-Schematron-Regeln und PDF/A-3.{% endif %}</p>
+  </div>
+</div>
+
+<div id="drop" class="drop" tabindex="0">
+  <strong>{% if lang == 'en' %}Drop a PDF or XML file here{% else %}PDF- oder XML-Datei hier ablegen{% endif %}</strong><br>
+  {% if lang == 'en' %}or click to choose a file (max. 25 MB){% else %}oder klicken, um eine Datei auszuwählen (max. 25 MB){% endif %}
+  <input type="file" id="file" accept=".pdf,.xml,application/pdf,application/xml,text/xml" hidden>
+</div>
+<p class="muted">{% if lang == 'en' %}The file is only kept in memory for the duration of the check and deleted immediately afterwards. Nothing is stored.{% else %}Die Datei wird nur für die Dauer der Prüfung im Speicher gehalten und danach sofort gelöscht. Es wird nichts gespeichert.{% endif %}</p>
+
+<div id="result"></div>
+<div class="toast" id="toast"></div>
+{% endblock %}
+{% block scripts %}<script src="/static/site/validate.js"></script>{% endblock %}

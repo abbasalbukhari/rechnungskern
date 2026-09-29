@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<title>{{ title }} {{ inv.number }}</title>
+<style>
+:root { --accent: {{ layout.accent_color }}; }
+{{ css|safe }}
+</style>
+</head>
+<body>
+
+{# ---------- running header (pages 2+) and footer (all pages) ---------- #}
+<div class="running-header">
+  <div class="rh-left">{{ seller.name }}</div>
+  <div class="rh-right">{{ title }} {{ inv.number }} &middot; {{ inv.issue_date|date }}</div>
+</div>
+
+<div class="running-footer">
+  {% if layout.footer_columns %}
+  <div class="footer-columns cols-{{ layout.footer_columns|length }}">
+    {% for col in layout.footer_columns %}
+    <div class="footer-col">{{ col|nl2br }}</div>
+    {% endfor %}
+  </div>
+  {% elif layout.footer_text %}
+  <div class="footer-text">{{ layout.footer_text|nl2br }}</div>
+  {% else %}
+  <div class="footer-columns cols-3">
+    <div class="footer-col">{{ seller.name }}<br>{{ seller.address.line1 }}<br>{{ seller.address.postcode }} {{ seller.address.city }}</div>
+    <div class="footer-col">
+      {% if seller.vat_id %}{{ t.vat_id }}: {{ seller.vat_id }}<br>{% endif %}
+      {% if seller.tax_number %}{{ t.tax_number }}: {{ seller.tax_number }}<br>{% endif %}
+      {% if seller.legal_id %}{{ t.legal_id }}: {{ seller.legal_id }}{% endif %}
+    </div>
+    <div class="footer-col">
+      {% if seller.bank %}{{ t.iban }}: {{ seller.bank.iban }}<br>{% if seller.bank.bic %}{{ t.bic }}: {{ seller.bank.bic }}<br>{% endif %}{% if seller.bank.bank_name %}{{ seller.bank.bank_name }}{% endif %}{% endif %}
+    </div>
+  </div>
+  {% endif %}
+  <div class="page-number">{{ t.page }} <span class="pn"></span> {{ t.of }} <span class="pc"></span></div>
+</div>
+
+{# ---------- first page header ---------- #}
+<header class="first-header">
+  <div class="brand">
+    {% if logo %}
+    <img class="logo" src="{{ logo }}" alt="">
+    {% else %}
+    <div class="brand-name">{{ seller.trading_name or seller.name }}</div>
+    {% endif %}
+  </div>
+  {% if layout.header_text %}
+  <div class="header-text">{{ layout.header_text|nl2br }}</div>
+  {% endif %}
+</header>
+
+<section class="address-row">
+  <div class="recipient">
+    <div class="sender-line">{{ seller.name }} &middot; {{ seller.address.line1 }} &middot; {{ seller.address.postcode }} {{ seller.address.city }}</div>
+    <div class="recipient-address">
+      <div class="recipient-name">{{ buyer.name }}</div>
+      {% if buyer.trading_name %}<div>{{ buyer.trading_name }}</div>{% endif %}
+      {% if buyer.contact and buyer.contact.name %}<div>{{ buyer.contact.name }}</div>{% endif %}
+      <div>{{ buyer.address.line1 }}</div>
+      {% if buyer.address.line2 %}<div>{{ buyer.address.line2 }}</div>{% endif %}
+      {% if buyer.address.line3 %}<div>{{ buyer.address.line3 }}</div>{% endif %}
+      <div>{{ buyer.address.postcode }} {{ buyer.address.city }}</div>
+      {% if buyer.address.country != seller.address.country %}<div>{{ buyer.address.country }}</div>{% endif %}
+    </div>
+  </div>
+
+  <div class="meta">
+    <table class="meta-table">
+      <tr><th>{{ t.invoice_number }}</th><td>{{ inv.number }}</td></tr>
+      <tr><th>{{ t.invoice_date }}</th><td>{{ inv.issue_date|date }}</td></tr>
+      {% if inv.delivery_date %}<tr><th>{{ t.delivery_date }}</th><td>{{ inv.delivery_date|date }}</td></tr>{% endif %}
+      {% if inv.period_start %}<tr><th>{{ t.period }}</th><td>{{ inv.period_start|date }} &ndash; {{ inv.period_end|date }}</td></tr>{% endif %}
+      {% if inv.due_date %}<tr><th>{{ t.due_date }}</th><td>{{ inv.due_date|date }}</td></tr>{% endif %}
+      {% if buyer.customer_id %}<tr><th>{{ t.customer_id }}</th><td>{{ buyer.customer_id }}</td></tr>{% endif %}
+      {% if inv.buyer_reference %}<tr><th>{{ t.buyer_reference }}</th><td>{{ inv.buyer_reference }}</td></tr>{% endif %}
+      {% if inv.order_reference %}<tr><th>{{ t.order_reference }}</th><td>{{ inv.order_reference }}</td></tr>{% endif %}
+      {% if inv.contract_reference %}<tr><th>{{ t.contract_reference }}</th><td>{{ inv.contract_reference }}</td></tr>{% endif %}
+      {% if inv.project_reference %}<tr><th>{{ t.project_reference }}</th><td>{{ inv.project_reference }}</td></tr>{% endif %}
+      {% for prev in inv.preceding_invoices %}<tr><th>{{ t.preceding_invoice }}</th><td>{{ prev.number }}{% if prev.issue_date %} ({{ prev.issue_date|date }}){% endif %}</td></tr>{% endfor %}
+      {% if buyer.vat_id %}<tr><th>{{ t.your_vat_id }}</th><td>{{ buyer.vat_id }}</td></tr>{% endif %}
+    </table>
+    {% if seller.contact and (seller.contact.name or seller.contact.email or seller.contact.phone) %}
+    <div class="contact">
+      <div class="contact-title">{{ t.contact }}</div>
+      {% if seller.contact.name %}<div>{{ seller.contact.name }}{% if seller.contact.department %}, {{ seller.contact.department }}{% endif %}</div>{% endif %}
+      {% if seller.contact.phone %}<div>{{ t.phone }} {{ seller.contact.phone }}</div>{% endif %}
+      {% if seller.contact.email %}<div>{{ seller.contact.email }}</div>{% endif %}
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<h1 class="doc-title">{{ title }} <span class="doc-number">{{ inv.number }}</span></h1>
+
+{% if layout.intro_text %}
+<p class="intro">{{ layout.intro_text|nl2br }}</p>
+{% endif %}
+
+<table class="items">
+  <thead>
+    <tr>
+      <th class="c-pos">{{ t.pos }}</th>
+      <th class="c-desc">{{ t.description }}</th>
+      <th class="c-qty num">{{ t.quantity }}</th>
+      <th class="c-unit">{{ t.unit }}</th>
+      <th class="c-price num">{{ t.unit_price }}</th>
+      <th class="c-vat num">{{ t.vat }}</th>
+      <th class="c-amount num">{{ t.amount }}</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for ln in totals.lines %}
+    {% set item = ln.item %}
+    <tr class="item">
+      <td class="c-pos">{{ ln.position }}</td>
+      <td class="c-desc">
+        <div class="item-name">{{ item.name }}</div>
+        {% if item.description %}<div class="item-desc">{{ item.description|nl2br }}</div>{% endif %}
+        {% if item.seller_item_id %}<div class="item-sku">{{ item.seller_item_id }}</div>{% endif %}
+        {% if item.note %}<div class="item-desc">{{ item.note|nl2br }}</div>{% endif %}
+      </td>
+      <td class="c-qty num">{{ ln.quantity|number }}</td>
+      <td class="c-unit">{{ item.unit|unit }}</td>
+      <td class="c-price num">
+        {{ ln.net_unit_price|money }}
+        {% if ln.gross_unit_price is not none %}<div class="was">{{ t.instead_of }} <s>{{ ln.gross_unit_price|money }}</s></div>{% endif %}
+        {% if item.price_basis_quantity != 1 %}<div class="was">/ {{ item.price_basis_quantity|number }} {{ item.unit|unit }}</div>{% endif %}
+      </td>
+      <td class="c-vat num">{{ item.tax_rate|pct }} %</td>
+      <td class="c-amount num">{{ ln.base_amount|money }}</td>
+    </tr>
+    {% for a in ln.allowances %}
+    <tr class="sub">
+      <td></td>
+      <td colspan="5">{{ t.allowance }}{% if a.reason %}: {{ a.reason }}{% endif %}{% if a.percent is not none %} ({{ a.percent|pct }} %){% endif %}</td>
+      <td class="c-amount num">-{{ a.amount|money }}</td>
+    </tr>
+    {% endfor %}
+    {% for c in ln.charges %}
+    <tr class="sub">
+      <td></td>
+      <td colspan="5">{{ t.charge }}{% if c.reason %}: {{ c.reason }}{% endif %}{% if c.percent is not none %} ({{ c.percent|pct }} %){% endif %}</td>
+      <td class="c-amount num">+{{ c.amount|money }}</td>
+    </tr>
+    {% endfor %}
+    {% if ln.allowances or ln.charges %}
+    <tr class="sub sub-total">
+      <td></td>
+      <td colspan="5"></td>
+      <td class="c-amount num">{{ ln.total|money }}</td>
+    </tr>
+    {% endif %}
+  {% endfor %}
+  </tbody>
+</table>
+
+<section class="totals-block">
+  <table class="totals">
+    <tr><th>{{ t.net_total }}</th><td class="num">{{ totals.line_total|money }}</td></tr>
+    {% for a in totals.allowances %}
+    <tr><th>{{ t.allowance }}{% if a.reason %}: {{ a.reason }}{% endif %}{% if a.percent is not none %} ({{ a.percent|pct }} %){% endif %}</th><td class="num">-{{ a.amount|money }}</td></tr>
+    {% endfor %}
+    {% for c in totals.charges %}
+    <tr><th>{{ t.charge }}{% if c.reason %}: {{ c.reason }}{% endif %}{% if c.percent is not none %} ({{ c.percent|pct }} %){% endif %}</th><td class="num">+{{ c.amount|money }}</td></tr>
+    {% endfor %}
+    {% if totals.allowances or totals.charges %}
+    <tr class="basis"><th>{{ t.tax_basis }}</th><td class="num">{{ totals.tax_basis_total|money }}</td></tr>
+    {% endif %}
+    {% for b in totals.breakdown %}
+    <tr>
+      <th>
+        {% if b.category.value == 'S' %}
+          {{ t.vat_on.format(rate=b.rate|pct, base=b.taxable_amount|money) }}
+        {% else %}
+          {{ t.vat_exempt.format(category=b.category.value, base=b.taxable_amount|money) }}
+        {% endif %}
+      </th>
+      <td class="num">{{ b.tax_amount|money }}</td>
+    </tr>
+    {% endfor %}
+    <tr class="grand"><th>{{ t.gross_total }}</th><td class="num">{{ totals.grand_total|money }}</td></tr>
+    {% if totals.prepaid %}
+    <tr><th>{{ t.prepaid }}</th><td class="num">-{{ totals.prepaid|money }}</td></tr>
+    <tr class="grand"><th>{{ t.amount_due }}</th><td class="num">{{ totals.due|money }}</td></tr>
+    {% endif %}
+  </table>
+  {% for b in totals.breakdown if b.exemption_reason %}
+  <p class="exempt">{{ b.exemption_reason }}</p>
+  {% endfor %}
+</section>
+
+<section class="payment-block">
+  <h2>{{ t.payment }}</h2>
+  {% if pay.terms_text %}<p class="terms">{{ pay.terms_text|nl2br }}</p>{% endif %}
+  <table class="payment">
+    <tr><th>{{ t.payment_terms if not pay.terms_text else t.payment }}</th><td>{{ means_label }}{% if pay.means_text %} &ndash; {{ pay.means_text }}{% endif %}{% if inv.due_date %} &middot; {{ t.due_date }} {{ inv.due_date|date }}{% endif %}</td></tr>
+    {% if seller.bank and pay.means_code in ('30', '42', '58') %}
+    <tr><th>{{ t.iban }}</th><td>{{ seller.bank.iban }}</td></tr>
+    {% if seller.bank.bic %}<tr><th>{{ t.bic }}</th><td>{{ seller.bank.bic }}</td></tr>{% endif %}
+    {% if seller.bank.account_holder %}<tr><th>{{ t.account_holder }}</th><td>{{ seller.bank.account_holder }}</td></tr>{% endif %}
+    {% if seller.bank.bank_name %}<tr><th>{{ t.bank }}</th><td>{{ seller.bank.bank_name }}</td></tr>{% endif %}
+    <tr><th>{{ t.payment_reference }}</th><td>{{ inv.payment_reference or inv.number }}</td></tr>
+    {% endif %}
+    {% if pay.means_code in ('49', '59') %}
+    {% if pay.mandate_reference %}<tr><th>{{ t.mandate }}</th><td>{{ pay.mandate_reference }}</td></tr>{% endif %}
+    {% if pay.creditor_id %}<tr><th>{{ t.creditor_id }}</th><td>{{ pay.creditor_id }}</td></tr>{% endif %}
+    {% endif %}
+  </table>
+  {% if inv.type_code == '381' %}<p class="terms">{{ t.credit_note_hint }}</p>{% endif %}
+</section>
+
+{% if inv.notes %}
+<section class="notes-block">
+  <h2>{{ t.notes }}</h2>
+  {% for n in inv.notes %}<p>{{ n.text|nl2br }}</p>{% endfor %}
+</section>
+{% endif %}
+
+{% if layout.closing_text %}
+<p class="closing">{{ layout.closing_text|nl2br }}</p>
+{% endif %}
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+services:
+  api:
+    build: .
+    image: e-rechnung:local
+    ports:
+      # host port 8090 (8000 is often taken by other local servers, e.g. Tomcat)
+      - "8090:8000"
+    env_file:
+      - .env
+    volumes:
+      # live reload of the application code during development
+      - ./app:/srv/app
+      - ./examples:/srv/examples
+      - ./tests:/srv/tests
+      - ./out:/srv/out
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
