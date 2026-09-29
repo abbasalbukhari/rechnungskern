@@ -41,7 +41,11 @@ class Settings:
 
     # Public website (landing page, Impressum, Datenschutz). Empty operator fields show a placeholder.
     site_name: str = os.getenv("SITE_NAME", "Rechnungskern")
-    site_url: str = os.getenv("SITE_URL", "").rstrip("/")  # e.g. https://api.rechnungskern.de
+    site_url: str = os.getenv("SITE_URL", "").rstrip("/")  # canonical base URL, e.g. https://rechnungskern.de
+    # Alias hosts (www, api, ...): website pages are 301-redirected to SITE_URL, other responses get noindex.
+    canonical_redirect_hosts: list[str] = field(
+        default_factory=lambda: [h.lower() for h in _split(os.getenv("CANONICAL_REDIRECT_HOSTS", ""))]
+    )
     contact_email: str = os.getenv("CONTACT_EMAIL", "")
     operator_name: str = os.getenv("OPERATOR_NAME", "")
     operator_street: str = os.getenv("OPERATOR_STREET", "")

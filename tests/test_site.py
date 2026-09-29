@@ -112,3 +112,28 @@ def test_public_validate_returns_summary(client, sample):
     body = r.json()
     assert body["valid"] is True
     assert body["summary"]["number"] == "RE-2026-00042"
+
+
+def test_canonical_host(client, sample):
+    www = {"host": "www.example.test"}
+    api = {"host": "api.example.test"}
+
+    r = client.get("/", headers=www, follow_redirects=False)
+    assert r.status_code == 301 and r.headers["location"] == "https://example.test/"
+    r = client.get("/rechnung?x=1", headers=api, follow_redirects=False)
+    assert r.status_code == 301 and r.headers["location"] == "https://example.test/rechnung?x=1"
+    r = client.get("/sitemap.xml", headers=www, follow_redirects=False)
+    assert r.status_code == 301
+
+    # API and technical endpoints stay available on alias hosts, but are not indexable
+    r = client.get("/health", headers=api, follow_redirects=False)
+    assert r.status_code == 200 and r.headers["x-robots-tag"] == "noindex, nofollow"
+    r = client.post("/v1/public/invoices/totals", json=sample, headers=api, follow_redirects=False)
+    assert r.status_code == 200 and r.json()["grand_total"] == "2190.28"
+    assert client.get("/docs", headers=api, follow_redirects=False).status_code == 200
+
+    # canonical host and unknown hosts (localhost, IP) are untouched
+    r = client.get("/", headers={"host": "example.test"}, follow_redirects=False)
+    assert r.status_code == 200 and "x-robots-tag" not in r.headers
+    assert '<link rel="canonical" href="https://example.test/">' in r.text
+    assert client.get("/", follow_redirects=False).status_code == 200

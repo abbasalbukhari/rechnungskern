@@ -13,6 +13,8 @@ os.environ["API_KEYS"] = "test-key"
 os.environ["ALLOW_LOGO_URL"] = "false"
 os.environ["PROJECT_REPO"] = "https://github.com/example/rechnungskern"
 os.environ["AUTHOR_NAME"] = "Erika Musterfrau"
+os.environ["SITE_URL"] = "https://example.test"
+os.environ["CANONICAL_REDIRECT_HOSTS"] = "www.example.test, api.example.test"
 _local_jar = Path(__file__).resolve().parent.parent / "tools" / "Mustang-CLI.jar"
 if not os.getenv("MUSTANG_JAR") and _local_jar.is_file():
     os.environ["MUSTANG_JAR"] = str(_local_jar)  # lets the app's /v1/validate work in local runs too

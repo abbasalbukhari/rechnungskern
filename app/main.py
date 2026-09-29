@@ -9,9 +9,9 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, FastAPI, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse, JSONResponse, Response
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, Response
 from fastapi.staticfiles import StaticFiles
 from lxml import etree
 
@@ -24,6 +24,7 @@ from .logo import LogoError, logo_data_uri
 from .pdf_renderer import html_to_pdf, render_html, weasyprint_available
 from .ratelimit import rate_limit
 from .schemas import InvoiceRequest
+from .site import PAGES
 from .site import router as site_router
 from .summary import summarize
 from .xml_builder import build_xml
@@ -61,6 +62,28 @@ app.add_middleware(
     allow_headers=["*"],
     expose_headers=["Content-Disposition"],
 )
+
+SITE_PATHS = {path for path, _ in PAGES} | {"/sitemap.xml", "/robots.txt"}
+
+
+@app.middleware("http")
+async def canonical_host(request: Request, call_next):
+    """One canonical host for search engines.
+
+    On alias hosts (CANONICAL_REDIRECT_HOSTS, e.g. www and api) website pages answer with a permanent
+    redirect to SITE_URL; everything else (API, docs, health) is served but marked noindex.
+    """
+    host = (request.headers.get("host") or "").split(":")[0].lower()
+    if settings.site_url and host in settings.canonical_redirect_hosts:
+        path = request.url.path.rstrip("/") or "/"
+        if request.method in ("GET", "HEAD") and path in SITE_PATHS:
+            query = f"?{request.url.query}" if request.url.query else ""
+            return RedirectResponse(f"{settings.site_url}{path}{query}", status_code=301)
+        response = await call_next(request)
+        response.headers["X-Robots-Tag"] = "noindex, nofollow"
+        return response
+    return await call_next(request)
+
 
 app.include_router(site_router)
 app.mount("/static", StaticFiles(directory=str(APP_DIR / "static")), name="static")

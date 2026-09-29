@@ -37,6 +37,7 @@ Internet ──▶ :80/:443  Caddy (TLS, Let's Encrypt, gzip, 25 MB body limit, 
 | `API_KEYS` | Comma separated keys for `X-API-Key` (keyed endpoints). |
 | `SITE_ADDRESS` | Caddy site address: `domain.tld, www.domain.tld, api.domain.tld` → automatic HTTPS; `:80` → plain HTTP for a first test. |
 | `SITE_URL`, `SITE_NAME` | Canonical base URL and product name used on the website and in sitemap/JSON-LD. |
+| `CANONICAL_REDIRECT_HOSTS` | Alias hosts (`www.…`, `api.…`). Website pages on these hosts answer `301` to `SITE_URL`; API, docs and health stay reachable there with `X-Robots-Tag: noindex`. Prevents duplicate content in search engines. |
 | `CONTACT_EMAIL`, `OPERATOR_*` | Impressum / Datenschutz data (name, street, postcode+city, country, phone, VAT ID, register). |
 | `AUTHOR_*`, `PROJECT_REPO` | About page: title line, LinkedIn/GitHub/XING, comma separated websites, source code URL. |
 | `PUBLIC_ENABLED`, `PUBLIC_RATE_LIMIT`, `PUBLIC_VALIDATE_LIMIT` | Key-less endpoints for the browser pages and their per-IP hourly limits. |
