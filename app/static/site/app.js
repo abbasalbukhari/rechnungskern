@@ -202,20 +202,27 @@
   function itemsHtml() {
     const rows = state.items.map((it, i) => {
       const p = (k) => `items.${i}.${k}`;
-      const sel = (k, opts) => `<select data-path="${p(k)}">${opts.map(([v, l]) => `<option value="${v}"${it[k] === v ? " selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
-      return `<tr data-row="${i}">
-        <td class="pos-cell" data-label="${esc(T.pos)}" style="width:32px;padding-top:12px;color:var(--muted)">${i + 1}</td>
-        <td data-label="${esc(T.item)}"><input data-path="${p("name")}" value="${esc(it.name)}" placeholder="${esc(T.item)}" required><textarea class="desc" data-path="${p("description")}" placeholder="${esc(T.description)}">${esc(it.description)}</textarea></td>
-        <td class="num" data-label="${esc(T.qty)}" style="width:80px"><input data-path="${p("quantity")}" value="${esc(it.quantity)}" inputmode="decimal"></td>
-        <td data-label="${esc(T.unit)}" style="width:110px">${sel("unit", UNITS)}</td>
-        <td class="num" data-label="${esc(T.price)}" style="width:110px"><input data-path="${p("unit_price")}" value="${esc(it.unit_price)}" inputmode="decimal" placeholder="0,00" required></td>
-        <td data-label="${esc(T.vat)}" style="width:150px">${sel("tax_rate", [["19", "19 %"], ["7", "7 %"], ["0", "0 %"]])}${it.tax_rate === "0" ? `<div style="margin-top:4px">${sel("tax_category", ["Z", "E", "AE", "K", "G"].map((c) => [c, T["cat_" + c]]))}</div>` : ""}</td>
-        <td class="num" data-label="${esc(T.discount)}" style="width:80px"><input data-path="${p("discount_percent")}" value="${esc(it.discount_percent)}" inputmode="decimal" placeholder="0"></td>
-        <td class="item-total" data-label="${esc(T.total)}" id="lt_${i}">${lineTotal(it)}</td>
-        <td style="width:40px"><button type="button" class="del" data-del="${i}" title="${esc(T.remove)}">×</button></td>
-      </tr>`;
+      const lab = { unit: T.unit, tax_rate: T.vat, tax_category: T.category };
+      const sel = (k, opts) => `<select data-path="${p(k)}" aria-label="${esc(lab[k])}">${opts.map(([v, l]) => `<option value="${v}"${it[k] === v ? " selected" : ""}>${esc(l)}</option>`).join("")}</select>`;
+      return `<div class="item-card" data-row="${i}">
+        <div class="item-head">
+          <span class="item-pos">${i + 1}</span>
+          <input class="item-name" data-path="${p("name")}" value="${esc(it.name)}" placeholder="${esc(T.item)} *" aria-label="${esc(T.item)}" required>
+          <button type="button" class="del" data-del="${i}" title="${esc(T.remove)}" aria-label="${esc(T.remove)}">×</button>
+        </div>
+        <textarea class="desc" data-path="${p("description")}" placeholder="${esc(T.description)}" rows="1">${esc(it.description)}</textarea>
+        <div class="item-grid">
+          <div class="f"><label>${esc(T.qty)}</label><input class="r" data-path="${p("quantity")}" value="${esc(it.quantity)}" inputmode="decimal"></div>
+          <div class="f"><label>${esc(T.unit)}</label>${sel("unit", UNITS)}</div>
+          <div class="f"><label>${esc(T.price)} <span class="req">*</span></label><input class="r" data-path="${p("unit_price")}" value="${esc(it.unit_price)}" inputmode="decimal" placeholder="0,00" required></div>
+          <div class="f"><label>${esc(T.vat)}</label>${sel("tax_rate", [["19", "19 %"], ["7", "7 %"], ["0", "0 %"]])}</div>
+          <div class="f"><label>${esc(T.discount)}</label><input class="r" data-path="${p("discount_percent")}" value="${esc(it.discount_percent)}" inputmode="decimal" placeholder="0"></div>
+          <div class="f"><label>${esc(T.total)}</label><div class="item-total" id="lt_${i}">${lineTotal(it)}</div></div>
+          ${it.tax_rate === "0" ? `<div class="f wide"><label>${esc(T.category)}</label>${sel("tax_category", ["Z", "E", "AE", "K", "G"].map((c) => [c, T["cat_" + c]]))}</div>` : ""}
+        </div>
+      </div>`;
     }).join("");
-    return `<table class="items-table"><thead><tr><th></th><th>${esc(T.item)}</th><th>${esc(T.qty)}</th><th>${esc(T.unit)}</th><th>${esc(T.price)}</th><th>${esc(T.vat)}</th><th>${esc(T.discount)}</th><th style="text-align:right">${esc(T.total)}</th><th></th></tr></thead><tbody>${rows}</tbody></table>
+    return `<div class="items">${rows}</div>
       <div class="btn-row"><button type="button" class="btn secondary small" id="addItem">${esc(T.add_item)}</button></div>`;
   }
 

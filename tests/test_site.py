@@ -50,6 +50,15 @@ def test_seo_extras(client):
     assert client.get("/static/site/site.css").status_code == 200
 
 
+def test_source_and_license_links(client):
+    for path in ("/", "/en", "/ueber", "/en/about", "/rechnung"):
+        html = client.get(path).text
+        assert 'href="https://github.com/example/rechnungskern"' in html, path
+        assert "https://github.com/example/rechnungskern/blob/main/LICENSE" in html, path
+    assert '"SoftwareSourceCode"' in client.get("/").text
+    assert "Erika Musterfrau" in client.get("/").text
+
+
 def test_public_endpoints_need_no_key(client, sample):
     r = client.post("/v1/public/invoices/totals", json=sample)
     assert r.status_code == 200 and r.json()["grand_total"] == "2190.28"

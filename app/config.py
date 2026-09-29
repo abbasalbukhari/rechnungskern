@@ -60,7 +60,8 @@ class Settings:
     author_github: str = os.getenv("AUTHOR_GITHUB", "")
     author_xing: str = os.getenv("AUTHOR_XING", "")
     author_websites: list[str] = field(default_factory=lambda: _split(os.getenv("AUTHOR_WEBSITE", "")))  # comma separated
-    project_repo: str = os.getenv("PROJECT_REPO", "")  # public source code URL, if any
+    project_repo: str = os.getenv("PROJECT_REPO", "").rstrip("/")  # public source code URL, if any
+    project_license: str = os.getenv("PROJECT_LICENSE", "MIT")
 
 
 settings = Settings()

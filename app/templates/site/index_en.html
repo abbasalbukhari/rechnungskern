@@ -7,7 +7,8 @@
 {"@context":"https://schema.org","@graph":[
  {"@type":"WebSite","name":"{{ s.site_name }}","url":"{{ base_url }}/en","inLanguage":"en"},
  {"@type":"SoftwareApplication","name":"{{ s.site_name }}","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"{{ base_url }}/en","description":"Creates and validates EN 16931 e-invoices (ZUGFeRD/Factur-X PDF/A-3, XRechnung XML) – online and via API.","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"featureList":["ZUGFeRD 2.x / Factur-X PDF/A-3","XRechnung 3.0 XML","Validation with Mustang (EN 16931, XRechnung, PDF/A-3)","REST API","No data retention"]{% if s.author_name %},"author":{"@type":"Person","name":"{{ s.author_name }}","url":"{{ base_url }}/en/about"}{% endif %}},
- {"@type":"FAQPage","mainEntity":[
+{% if s.project_repo %} {"@type":"SoftwareSourceCode","name":"{{ s.site_name }}","codeRepository":"{{ s.project_repo }}","license":"{{ s.project_repo }}/blob/main/LICENSE","programmingLanguage":"Python"{% if s.author_name %},"author":{"@type":"Person","name":"{{ s.author_name }}","url":"{{ base_url }}/en/about"}{% endif %}},
+{% endif %} {"@type":"FAQPage","mainEntity":[
   {"@type":"Question","name":"What is an EN 16931 e-invoice?","acceptedAnswer":{"@type":"Answer","text":"An e-invoice is an invoice in a structured, machine-readable format according to the European standard EN 16931. In Germany the common formats are XRechnung (pure XML) and ZUGFeRD/Factur-X (PDF with embedded XML)."}},
   {"@type":"Question","name":"What is the difference between ZUGFeRD and XRechnung?","acceptedAnswer":{"@type":"Answer","text":"ZUGFeRD/Factur-X is a hybrid PDF/A-3 containing a human-readable document plus the XML data. XRechnung is the standard for invoices to German public authorities and consists of XML only, with additional mandatory fields such as the Leitweg-ID."}},
   {"@type":"Question","name":"When does e-invoicing become mandatory in Germany?","acceptedAnswer":{"@type":"Answer","text":"Since 1 January 2025 all businesses must be able to receive e-invoices. Sending becomes mandatory on 1 January 2027 for companies with more than EUR 800,000 previous-year turnover and on 1 January 2028 for all B2B businesses."}},
@@ -65,6 +66,12 @@
 <details class="faq"><summary>When does e-invoicing become mandatory in Germany?</summary><p>Since 1 January 2025 all businesses must be able to receive e-invoices. Sending becomes mandatory on 1 January 2027 for companies with more than EUR 800,000 previous-year turnover and on 1 January 2028 for all B2B businesses.</p></details>
 <details class="faq"><summary>Is the service really free?</summary><p>Yes. Creating and validating in the browser is free without registration. For the API a short e-mail is enough to get a key. There is no guarantee of availability; the service may be restricted or discontinued at any time.</p></details>
 <details class="faq"><summary>Is my invoice data stored?</summary><p>No. Data is processed in memory only and discarded immediately after delivery – no copies, no backups, no analytics. The editor stores your entries exclusively in your own browser. Details in the <a href="/privacy">privacy policy</a>.</p></details>
+
+{% if s.project_repo %}
+<h2>Open source</h2>
+<p>The complete source code of {{ s.site_name }} is public and released under the <a href="{{ s.project_repo }}/blob/main/LICENSE" rel="license noopener">{{ s.project_license }} License</a>. You can verify how your data is processed, run the service yourself or suggest improvements.</p>
+<div class="btn-row"><a class="btn secondary" href="{{ s.project_repo }}" rel="noopener">Source code on GitHub</a></div>
+{% endif %}
 
 {% if s.author_name %}
 <h2>About the project</h2>

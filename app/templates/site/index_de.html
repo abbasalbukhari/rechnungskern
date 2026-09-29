@@ -7,7 +7,8 @@
 {"@context":"https://schema.org","@graph":[
  {"@type":"WebSite","name":"{{ s.site_name }}","url":"{{ base_url }}/","inLanguage":"de"},
  {"@type":"SoftwareApplication","name":"{{ s.site_name }}","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"{{ base_url }}/","description":"Erstellt und prüft E-Rechnungen nach EN 16931 (ZUGFeRD/Factur-X PDF/A-3, XRechnung XML) – online und per API.","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"featureList":["ZUGFeRD 2.x / Factur-X PDF/A-3","XRechnung 3.0 XML","Validierung mit Mustang (EN 16931, XRechnung, PDF/A-3)","REST-API","Keine Datenspeicherung"]{% if s.author_name %},"author":{"@type":"Person","name":"{{ s.author_name }}","url":"{{ base_url }}/ueber"}{% endif %}},
- {"@type":"FAQPage","mainEntity":[
+{% if s.project_repo %} {"@type":"SoftwareSourceCode","name":"{{ s.site_name }}","codeRepository":"{{ s.project_repo }}","license":"{{ s.project_repo }}/blob/main/LICENSE","programmingLanguage":"Python"{% if s.author_name %},"author":{"@type":"Person","name":"{{ s.author_name }}","url":"{{ base_url }}/ueber"}{% endif %}},
+{% endif %} {"@type":"FAQPage","mainEntity":[
   {"@type":"Question","name":"Was ist eine E-Rechnung nach EN 16931?","acceptedAnswer":{"@type":"Answer","text":"Eine E-Rechnung ist eine Rechnung in einem strukturierten, maschinenlesbaren Format nach der europäischen Norm EN 16931. In Deutschland sind die Formate XRechnung (reines XML) und ZUGFeRD/Factur-X (PDF mit eingebettetem XML) üblich."}},
   {"@type":"Question","name":"Worin unterscheiden sich ZUGFeRD und XRechnung?","acceptedAnswer":{"@type":"Answer","text":"ZUGFeRD/Factur-X ist ein hybrides PDF/A-3, das ein für Menschen lesbares Dokument und die XML-Daten enthält. XRechnung ist der Standard für Rechnungen an deutsche Behörden und besteht nur aus XML mit zusätzlichen Pflichtangaben wie der Leitweg-ID."}},
   {"@type":"Question","name":"Ab wann ist die E-Rechnung in Deutschland Pflicht?","acceptedAnswer":{"@type":"Answer","text":"Seit dem 1. Januar 2025 müssen alle Unternehmen E-Rechnungen empfangen können. Die Pflicht zum Versand gilt ab 1. Januar 2027 für Unternehmen mit mehr als 800.000 Euro Vorjahresumsatz und ab 1. Januar 2028 für alle Unternehmen im B2B-Bereich."}},
@@ -65,6 +66,12 @@
 <details class="faq"><summary>Ab wann ist die E-Rechnung in Deutschland Pflicht?</summary><p>Seit dem 1. Januar 2025 müssen alle Unternehmen E-Rechnungen empfangen können. Der Versand wird ab 1. Januar 2027 für Unternehmen mit mehr als 800.000 € Vorjahresumsatz und ab 1. Januar 2028 für alle Unternehmen im B2B-Bereich Pflicht.</p></details>
 <details class="faq"><summary>Ist der Dienst wirklich kostenlos?</summary><p>Ja. Erstellen und Prüfen im Browser sind kostenlos und ohne Registrierung. Für die API genügt eine kurze E-Mail für einen Schlüssel. Es besteht kein Anspruch auf Verfügbarkeit; der Dienst kann jederzeit eingeschränkt oder eingestellt werden.</p></details>
 <details class="faq"><summary>Werden meine Rechnungsdaten gespeichert?</summary><p>Nein. Daten werden nur im Arbeitsspeicher verarbeitet und unmittelbar nach der Auslieferung verworfen – keine Kopien, keine Sicherungen, keine Auswertung. Der Editor speichert Ihre Eingaben ausschließlich lokal in Ihrem Browser. Details in der <a href="/datenschutz">Datenschutzerklärung</a>.</p></details>
+
+{% if s.project_repo %}
+<h2>Open Source</h2>
+<p>Der vollständige Quellcode von {{ s.site_name }} ist öffentlich und steht unter der <a href="{{ s.project_repo }}/blob/main/LICENSE" rel="license noopener">{{ s.project_license }}-Lizenz</a>. Sie können nachvollziehen, wie Ihre Daten verarbeitet werden, den Dienst selbst betreiben oder Verbesserungen vorschlagen.</p>
+<div class="btn-row"><a class="btn secondary" href="{{ s.project_repo }}" rel="noopener">Quellcode auf GitHub</a></div>
+{% endif %}
 
 {% if s.author_name %}
 <h2>Über das Projekt</h2>

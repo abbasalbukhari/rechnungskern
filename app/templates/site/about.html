@@ -11,7 +11,8 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
  {"@type":"Person","@id":"{{ base_url }}/ueber#person","name":"{{ name }}"{% if title_line %},"jobTitle":"{{ title_line }}"{% endif %},"url":"{{ base_url }}/ueber","email":"mailto:{{ s.contact_email }}","address":{"@type":"PostalAddress","addressLocality":"{{ (s.operator_city.split(' ', 1)[1] if ' ' in s.operator_city else s.operator_city) }}","addressCountry":"DE"}{% if same_as %},"sameAs":[{% for u in same_as %}"{{ u }}"{% if not loop.last %},{% endif %}{% endfor %}]{% endif %}},
- {"@type":"AboutPage","name":"{{ self.title() }}","url":"{{ base_url }}{{ path }}","inLanguage":"{{ lang }}","about":{"@id":"{{ base_url }}/ueber#person"},"mainEntity":{"@type":"SoftwareApplication","name":"{{ s.site_name }}","url":"{{ base_url }}/","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@id":"{{ base_url }}/ueber#person"}{% if s.project_repo %},"codeRepository":"{{ s.project_repo }}"{% endif %}}}
+ {"@type":"AboutPage","name":"{{ self.title() }}","url":"{{ base_url }}{{ path }}","inLanguage":"{{ lang }}","about":{"@id":"{{ base_url }}/ueber#person"},"mainEntity":{"@type":"SoftwareApplication","name":"{{ s.site_name }}","url":"{{ base_url }}/","applicationCategory":"BusinessApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"},"author":{"@id":"{{ base_url }}/ueber#person"}}}{% if s.project_repo %},
+ {"@type":"SoftwareSourceCode","name":"{{ s.site_name }}","codeRepository":"{{ s.project_repo }}","license":"{{ s.project_repo }}/blob/main/LICENSE","programmingLanguage":"Python","author":{"@id":"{{ base_url }}/ueber#person"}}{% endif %}
 ]}
 </script>
 {% endblock %}
@@ -41,7 +42,7 @@
   {% if s.author_github %}<li><a href="{{ s.author_github }}" rel="me noopener">GitHub</a></li>{% endif %}
   {% if s.author_xing %}<li><a href="{{ s.author_xing }}" rel="me noopener">XING</a></li>{% endif %}
   {% for w in s.author_websites %}<li><a href="{{ w }}" rel="me noopener">{{ w.replace("https://", "").replace("http://", "").rstrip("/") }}</a></li>{% endfor %}
-  {% if s.project_repo %}<li><a href="{{ s.project_repo }}" rel="noopener">Source code of {{ s.site_name }}</a></li>{% endif %}
+  {% if s.project_repo %}<li><a href="{{ s.project_repo }}" rel="noopener">Source code of {{ s.site_name }}</a> (<a href="{{ s.project_repo }}/blob/main/LICENSE" rel="license noopener">{{ s.project_license }} License</a>)</li>{% endif %}
 </ul>
 {% endif %}
 
@@ -76,7 +77,7 @@
   {% if s.author_github %}<li><a href="{{ s.author_github }}" rel="me noopener">GitHub</a></li>{% endif %}
   {% if s.author_xing %}<li><a href="{{ s.author_xing }}" rel="me noopener">XING</a></li>{% endif %}
   {% for w in s.author_websites %}<li><a href="{{ w }}" rel="me noopener">{{ w.replace("https://", "").replace("http://", "").rstrip("/") }}</a></li>{% endfor %}
-  {% if s.project_repo %}<li><a href="{{ s.project_repo }}" rel="noopener">Quellcode von {{ s.site_name }}</a></li>{% endif %}
+  {% if s.project_repo %}<li><a href="{{ s.project_repo }}" rel="noopener">Quellcode von {{ s.site_name }}</a> (<a href="{{ s.project_repo }}/blob/main/LICENSE" rel="license noopener">{{ s.project_license }}-Lizenz</a>)</li>{% endif %}
 </ul>
 {% endif %}
 

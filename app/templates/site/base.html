@@ -22,7 +22,7 @@
 </head>
 <body>
 <header class="top">
-  <div class="wrap">
+  <div class="wrap {{ self.wrap_class() }}">
     <nav>
       <a class="brand" href="{{ '/en' if lang == 'en' else '/' }}">{{ s.site_name }}<small>{% if lang == 'en' %}E-invoices via API{% else %}E-Rechnungen per API{% endif %}</small></a>
       <ul>
@@ -53,7 +53,7 @@
   </div>
 </main>
 <footer>
-  <div class="wrap">
+  <div class="wrap {{ self.wrap_class() }}">
     <ul>
       {% if lang == 'en' %}
       <li><a href="/en/invoice">Create invoice</a></li>
@@ -70,10 +70,12 @@
       <li><a href="/impressum">Impressum</a></li>
       <li><a href="/datenschutz">Datenschutzerklärung</a></li>
       {% endif %}
+      {% if s.project_repo %}<li><a href="{{ s.project_repo }}" rel="noopener">GitHub</a></li>{% endif %}
     </ul>
-    &copy; {{ year }} {{ s.site_name }}
-    {% if s.author_name %}&middot; {% if lang == 'en' %}A project by <a href="/en/about" rel="author">{{ s.author_name }}</a>{% else %}Ein Projekt von <a href="/ueber" rel="author">{{ s.author_name }}</a>{% endif %}{% endif %}
-    &middot; {% if lang == 'en' %}Free service, provided without any guarantee of availability. Your data is never stored.{% else %}Kostenloser Dienst ohne Verfügbarkeitsgarantie. Ihre Daten werden nicht gespeichert.{% endif %}
+    <p class="foot-line">&copy; {{ year }} {{ s.site_name }}
+    {% if s.author_name %}&middot; {% if lang == 'en' %}A project by <a href="/en/about" rel="author">{{ s.author_name }}</a>{% else %}Ein Projekt von <a href="/ueber" rel="author">{{ s.author_name }}</a>{% endif %}{{ " " }}{% endif %}
+    {% if s.project_repo %}&middot; {% if lang == 'en' %}Open source under the <a href="{{ s.project_repo }}/blob/main/LICENSE" rel="license noopener">{{ s.project_license }} License</a>{% else %}Open Source unter der <a href="{{ s.project_repo }}/blob/main/LICENSE" rel="license noopener">{{ s.project_license }}-Lizenz</a>{% endif %}{% endif %}</p>
+    <p class="foot-line">{% if lang == 'en' %}Free service, provided without any guarantee of availability. Your data is never stored.{% else %}Kostenloser Dienst ohne Verfügbarkeitsgarantie. Ihre Daten werden nicht gespeichert.{% endif %}</p>
   </div>
 </footer>
 {% block scripts %}{% endblock %}
